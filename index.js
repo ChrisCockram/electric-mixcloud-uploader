@@ -12,6 +12,8 @@ const port = process.env.SERVER_PORT;
 
 const version = process.env.npm_package_version;
 
+processingQueue=[];
+
 console.log('Software Version',version);
 
 app.use(express.static('public'));
@@ -71,7 +73,6 @@ function getShow(){
 }
 
 function request_show(show){
-    //console.log('request',show)
     start = moment(new Date(show.date +' '+show.start));
     end = moment(new Date(show.date +' '+show.end));
 
@@ -90,11 +91,11 @@ function request_show(show){
     fetch('http://localhost:8000/test.xml')
         .then(res => res.text())
         .then(text => {
-
             xml2js.parseStringPromise(text).then(function (job) {
-                console.dir(job);
                 if(job.response.job_id !== undefined ){
-                    console.log(job.response.job_id[0] );
+                    console.log(job.response.job_id[0]);
+                    show.job_id=job.response.job_id[0];
+                    processingQueue.append(show);
                 }else{
                     console.error('No job id found',text);
                 }
