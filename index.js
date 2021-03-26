@@ -3,7 +3,7 @@ const FtpSvr = require ( 'ftp-srv' );
 const fetch = require('node-fetch');
 const moment = require('moment');
 const xml2js = require ('xml2js');
-
+const path = require('path');
 
 require('dotenv').config();
 
@@ -12,7 +12,7 @@ const port = process.env.SERVER_PORT;
 
 const version = process.env.npm_package_version;
 
-processingQueue=[];
+let processingQueue=[];
 
 console.log('Software Version',version);
 
@@ -40,6 +40,7 @@ server.on('login', ({ connection, username, password }, resolve, reject) => {
             if (error) {
                 console.error(`FTP server error: could not receive file ${fileName} for upload ${error}`);
             }
+            processFile(fileName);
             console.info(`FTP server: upload successfully received - ${fileName}`);
         });
         resolve();
@@ -91,24 +92,63 @@ function request_show(show){
     fetch('http://localhost:8000/test.xml')
         .then(res => res.text())
         .then(text => {
+
             xml2js.parseStringPromise(text).then(function (job) {
                 if(job.response.job_id !== undefined ){
-                    console.log(job.response.job_id[0]);
                     show.job_id=job.response.job_id[0];
-                    processingQueue.append(show);
+                    if(!jobIdExist(job.response.job_id[0])){
+                        processingQueue.push(show);
+                    }else{
+                        console.error('Job ID already exists',job.response.job_id[0]);
+                    }
                 }else{
                     console.error('No job id found',text);
                 }
 
             }).catch(function (err) {
-                console.log('Failed to parse XML',text);
+                console.error('Failed to parse XML',text);
             });
         })
 
-
-
-    console.log(rm_url);
+    //console.log(rm_url);
 
 }
+
+function jobIdExist(job_id){
+    for (const show of processingQueue){
+        if(show.job_id==job_id){
+            return true;
+        }
+    }
+    return false;
+}
+
+function processFile(filePath){
+    console.log('FILE UPLOADED');
+    console.log(filePath);
+
+    let fileName = filePath.replace(/^.*[\\\/]/, '');
+
+    console.log(path.parse(filePath).name);
+    if(path.parse(filePath).ext=='.mp3'){
+
+        for(const show of processingQueue){
+            if(show.job_id==path.parse(filePath).name){
+                
+            }
+        }
+        console.error('job_id not matched');
+    }else{
+        console.error('Unexpected file type');
+    }
+
+
+}
+
+function getExtension(filename) {
+    var i = filename.lastIndexOf('.');
+    return (i < 0) ? '' : filename.substr(i);
+}
+
 getShow();
 setInterval(getShow, 1000);
