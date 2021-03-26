@@ -2,6 +2,7 @@ const express = require('express');
 const FtpSvr = require ( 'ftp-srv' );
 const fetch = require('node-fetch');
 const moment = require('moment');
+const xml2js = require ('xml2js');
 
 
 require('dotenv').config();
@@ -70,14 +71,42 @@ function getShow(){
 }
 
 function request_show(show){
-    console.log('request',show)
-    start = new Date(show.date +' '+show.start);
+    //console.log('request',show)
+    start = moment(new Date(show.date +' '+show.start));
+    end = moment(new Date(show.date +' '+show.end));
+
+    if(show.end<show.start){
+        end.add(1, 'day');
+    }
+
+    //console.log(moment(start).format('MMMM Do YYYY, h:mm:ss a'));
+
+    //let rm_url = 'http://radiomonitor.com/api/thisiselectric/?action=create_job&key='+process.env.RADIO_MONITOR_API+'&start_timestamp='+start.format('YYYYMMDDhhmmss')+'&end_timestamp='+end.format('YYYYMMDDhhmmss');
+
+    //TESTING URL
+    let rm_url = 'http://radiomonitor.com/api/thisiselectric/?action=create_job&key=sgFggFgg66sHkj&start_timestamp=20210326010000&end_timestamp=20210326010100';
 
 
-    console.log(moment().format('MMMM Do YYYY, h:mm:ss a'));
+    fetch('http://localhost:8000/test.xml')
+        .then(res => res.text())
+        .then(text => {
 
-    let rm_url = 'http://radiomonitor.com/api/thisiselectric/?action=create_job&key='+process.env.RADIO_MONITOR_API+'&start_timestamp=20151110000000&end_timestamp=20151110000500';
-    //console.log(rm_url);
+            xml2js.parseStringPromise(text).then(function (job) {
+                console.dir(job);
+                if(job.response.job_id !== undefined ){
+                    console.log(job.response.job_id[0] );
+                }else{
+                    console.error('No job id found',text);
+                }
+
+            }).catch(function (err) {
+                console.log('Failed to parse XML',text);
+            });
+        })
+
+
+
+    console.log(rm_url);
 
 }
 getShow();
