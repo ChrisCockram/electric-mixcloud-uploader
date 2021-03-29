@@ -11,6 +11,9 @@ const hash = crypto.createHash('sha256');
 const session = require('express-session');
 const bodyParser = require('body-parser');
 const FormData = require('form-data');
+const followRedirects = require('follow-redirects');
+followRedirects.maxRedirects = 10;
+followRedirects.maxBodyLength = 500 * 1024 * 1024 * 1024; // 500 GB
 
 require('dotenv').config();
 
@@ -144,7 +147,34 @@ server.on('login', ({ connection, username, password }, resolve, reject) => {
 server.listen();
 
 
-let current_show=false;
+let current_show= {
+    date: "2021-03-29",
+    start: "10:00",
+    end: "11:00",
+    show: {
+        id: 9360,
+        name: "Electric Anthems",
+        slug: "anthems",
+        url: "https://electricradio.co.uk/show/anthems/",
+        latest: "",
+        website: "",
+        hosts: [ ],
+        producers: [ ],
+        genres: [
+            "Classic House"
+        ],
+        languages: [ ],
+        avatar_url: "https://electricradio.co.uk/wp-content/uploads/2020/04/electric-anthems-150x150.jpg",
+        image_url: "https://electricradio.co.uk/wp-content/uploads/2020/04/electric-anthems-150x150.jpg",
+        route: "https://electricradio.co.uk/wp-json/radio/shows/?show=anthems",
+        feed: "https://electricradio.co.uk/feed/shows/?show=anthems"
+    },
+    encore: false,
+    split: false,
+    override: false
+};
+
+//current_show=false;
 //Get Current Show
 
 function getShow(){
@@ -170,6 +200,7 @@ function getShow(){
 }
 
 function request_show(show){
+    console.log('Requesting', show);
     if(settings.exclude.includes(show.show.id)){
         console.log('This show is on the excluded list');
         return false;
@@ -184,12 +215,13 @@ function request_show(show){
 
     //console.log(moment(start).format('MMMM Do YYYY, h:mm:ss a'));
 
-    let rm_url = 'http://radiomonitor.com/api/thisiselectric/?action=create_job&key='+process.env.RADIO_MONITOR_API+'&start_timestamp='+start.format('YYYYMMDDhhmmss')+'&end_timestamp='+end.format('YYYYMMDDhhmmss');
+    //let rm_url = 'http://radiomonitor.com/api/thisiselectric/?action=create_job&key='+process.env.RADIO_MONITOR_API+'&start_timestamp='+start.format('YYYYMMDDhhmmss')+'&end_timestamp='+end.format('YYYYMMDDhhmmss');
 
-    //TESTING URL
-    //let rm_url = 'http://radiomonitor.com/api/thisiselectric/?action=create_job&key=sgFggFgg66sHkj&start_timestamp=20210326010000&end_timestamp=20210326010100';
+    //TESTING URL;
+    let rm_url = 'http://localhost:8000/test.xml';
 
-
+    console.log(rm_url);
+    
     fetch(rm_url)
         .then(res => res.text())
         .then(text => {
@@ -197,6 +229,7 @@ function request_show(show){
             xml2js.parseStringPromise(text).then(function (job) {
                 if(job.response.job_id !== undefined ){
                     show.job_id=job.response.job_id[0];
+                    console.log('RM JobID',show.job_id);
                     if(!jobIdExist(job.response.job_id[0])){
                         processingQueue.push(show);
                     }else{
@@ -227,9 +260,7 @@ function jobIdExist(job_id){
 function processFile(filePath){
     console.log('FILE UPLOADED');
     console.log(filePath);
-
     let fileName = filePath.replace(/^.*[\\\/]/, '');
-
     console.log(path.parse(filePath).name);
     if(path.parse(filePath).ext=='.mp3'){
 
@@ -249,18 +280,18 @@ const uploadToMixcloud = async (show) =>{
     console.log('Uploading To Mixcloud',show);
     getArtwork(show).then( () => {
         uploadToMixcloudGo(show).then(response => {
+            //TODO Remove this item from processingQueue
             console.log(response);
             return true;
-            if (response.data.message) {
-                //console.log(response.data.message);
+            if (response.data.result.success) {
+                console.log('show uploaded');
+            }else{
+                console.log('Error uploading show');
             }
         }).catch(error => {
             console.log(error)
         });
     })
-
-
-
 }
 
 const getArtwork = async (show) => {
@@ -293,18 +324,11 @@ const getArtwork = async (show) => {
 const uploadToMixcloudGo = async (show) => {
     console.log('Uploading To Mixcloud GO',show);
     try {
-
-
-
         let audio = process.cwd() + "/ftp/"+show.job_id+'.mp3';
         let image = process.cwd() + "/images/"+show.show.id+'.jpg';
-
         const formData = new FormData();
-
-        // Append any plain string values to the request
         formData.append("name", show.show.name+' '+start.format('DD.MM.YYYY'));
         formData.append("description", show.show.url);
-
         i=0;
         for (const genre of show.show.genres){
             if(i==5){
@@ -313,12 +337,8 @@ const uploadToMixcloudGo = async (show) => {
             formData.append("tags-"+i+"-tag", genre);
             i++;
         }
-        // Append any files to the request
         formData.append("mp3", fs.createReadStream(audio), { knownLength: fs.statSync(audio).size });
         formData.append("picture", fs.createReadStream(image), { knownLength: fs.statSync(image).size });
-
-        console.log(formData);
-        // Prepare additional headers for Axios, which include FormData's headers and the Content-Length
         const headers = {
             ...formData.getHeaders(),
             "Content-Length": formData.getLengthSync()
@@ -326,7 +346,7 @@ const uploadToMixcloudGo = async (show) => {
 
         //return true;
         // Now send the request
-        axios.post("https://api.mixcloud.com/upload/?access_token="+process.env.MIXCLOUD_API_ACCESS_TOKEN, formData, {headers});
+        return axios.post("https://api.mixcloud.com/upload/?access_token="+process.env.MIXCLOUD_API_ACCESS_TOKEN, formData, {headers});
     } catch (error) {
         console.error(error)
     }
@@ -338,4 +358,4 @@ function getExtension(filename) {
 }
 
 getShow();
-setInterval(getShow, 1000);
+//setInterval(getShow, 1000);
