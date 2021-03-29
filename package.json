@@ -10,8 +10,12 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "axios": "^0.21.1",
+    "crypto": "^1.0.1",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
+    "express-session": "^1.17.1",
+    "form-data": "^4.0.0",
     "ftp-srv": "^4.4.0",
     "moment": "^2.29.1",
     "node-fetch": "^2.6.1",
