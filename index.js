@@ -12,10 +12,23 @@ const session = require('express-session');
 const bodyParser = require('body-parser');
 const FormData = require('form-data');
 const followRedirects = require('follow-redirects');
+const log4js = require("log4js");
+const readLastLines = require('read-last-lines');
+
 followRedirects.maxRedirects = 10;
 followRedirects.maxBodyLength = 500 * 1024 * 1024 * 1024; // 500 GB
 
 require('dotenv').config();
+
+log4js.configure({
+    appenders: {
+        everything: { type: 'file', filename: 'output.log' }
+    },
+    categories: {
+        default: { appenders: [ 'everything' ], level: 'debug' }
+    }
+});
+const logger = log4js.getLogger();
 
 const app = express();
 const port = process.env.SERVER_PORT;
@@ -24,7 +37,8 @@ const version = process.env.npm_package_version;
 
 let processingQueue=[];
 
-console.log('Software Version',version);
+
+logger.info('Software Version',version);
 app.use(session({
     secret: 'secret',
     resave: true,
@@ -37,7 +51,7 @@ app.post('/auth', function(request, response) {
     let password = request.body.password;
     if (username && password) {
         hashedPassword=crypto.createHash('sha256').update(password).digest('hex');
-        console.log(hashedPassword);
+        logger.info(hashedPassword);
         if(hashedPassword === process.env.LOGIN_PASSWORD && username === process.env.LOGIN_USERNAME){
             request.session.loggedin = true;
             request.session.username = username;
@@ -54,11 +68,23 @@ app.post('/auth', function(request, response) {
 app.get('/admin', function(request, response) {
     try {
         if (request.session.loggedin) {
-            response.send('<a href="https://www.mixcloud.com/oauth/authorize?client_id=HzP4JwtYJaE8skCdgv&redirect_uri=http://localhost:8000/mixcloudauth">Link Mixcloud</a>');
+
+            readLastLines.read('output.log', 50)
+                .then((lines) =>{
+                    const log = fs.readFileSync('output.log', 'utf8')
+                    let html ='<h1>Electric MixCloud Uploader</h1>';
+                    html+='<br><a href="https://www.mixcloud.com/oauth/authorize?client_id=HzP4JwtYJaE8skCdgv&redirect_uri=http://mixcloud.electricradio.co.uk/mixcloudauth">Link Mixcloud</a>';
+                    html+='<br><br><textarea style="width:800px; height: 400px;">'+log+'</textarea>';
+                    response.send(html);
+                    response.end();
+
+                });
+
         } else {
             response.redirect('/');
+            response.end();
+
         }
-        response.end();
     } catch (error) {
         response.redirect('/');
         response.end();
@@ -66,13 +92,11 @@ app.get('/admin', function(request, response) {
     }
 });
 app.get('/mixcloudauth', function(request, response) {
-    console.log(request.query.code);
+    logger.info(request.query.code);
     try {
         if (request.session.loggedin) {
             OAUTH_CODE=request.query.code
-
-            let url = "https://www.mixcloud.com/oauth/access_token?client_id="+process.env.MIXCLOUD_API_CLIENT_ID+"&redirect_uri=http://localhost:8000/mixcloudauth&client_secret="+process.env.MIXCLOUD_API_CLIENT_SECRET+"&code="+OAUTH_CODE;
-
+            let url = "https://www.mixcloud.com/oauth/access_token?client_id="+process.env.MIXCLOUD_API_CLIENT_ID+"&redirect_uri=http://mixcloud.electricradio.co.uk/mixcloudauth&client_secret="+process.env.MIXCLOUD_API_CLIENT_SECRET+"&code="+OAUTH_CODE;
             fetch(url, { method: "Get" })
                 .then(res => res.json())
                 .then((json) => {
@@ -86,12 +110,9 @@ app.get('/mixcloudauth', function(request, response) {
                     }
 
                 });
-
-
         } else {
             response.send('Please login to view this page!');
             response.end();
-
         }
     } catch (error) {
         response.send('Please login to view this page!');
@@ -101,7 +122,7 @@ app.get('/mixcloudauth', function(request, response) {
 });
 app.use(express.static('public'));
 app.listen(port, () => {
-    console.log(`listening on port ${port}!`)
+    logger.info(`listening on port ${port}!`)
 })
 
 settings={
@@ -179,19 +200,19 @@ let current_show= {
 
 function getShow(){
     if(!process.env.MIXCLOUD_API_ACCESS_TOKEN) {
-        console.log('Mixcloud API not set');
+        logger.info('Mixcloud API not set');
         return false;
     }
     fetch(process.env.RADIO_API, { method: "Get" })
         .then(res => res.json())
         .then((json) => {
-            //console.log(json.broadcast.current_show);
-            //console.log('current_show');
+            //logger.info(json.broadcast.current_show);
+            //logger.info('current_show');
             if(current_show==false){
                 current_show=json.broadcast.current_show;
             }else {
                 if(current_show.show.id != json.broadcast.current_show.show.id){
-                    console.log('New Current Show!')
+                    logger.info('New Current Show!')
                     request_show(current_show);
                     current_show=json.broadcast.current_show;
                 }
@@ -200,9 +221,9 @@ function getShow(){
 }
 
 function request_show(show){
-    console.log('Requesting', show);
+    logger.info('Requesting', show);
     if(settings.exclude.includes(show.show.id)){
-        console.log('This show is on the excluded list');
+        logger.info('This show is on the excluded list');
         return false;
     }
 
@@ -213,14 +234,14 @@ function request_show(show){
         end.add(1, 'day');
     }
 
-    //console.log(moment(start).format('MMMM Do YYYY, h:mm:ss a'));
+    //logger.info(moment(start).format('MMMM Do YYYY, h:mm:ss a'));
 
     //let rm_url = 'http://radiomonitor.com/api/thisiselectric/?action=create_job&key='+process.env.RADIO_MONITOR_API+'&start_timestamp='+start.format('YYYYMMDDhhmmss')+'&end_timestamp='+end.format('YYYYMMDDhhmmss');
 
     //TESTING URL;
     let rm_url = 'http://localhost:8000/test.xml';
 
-    console.log(rm_url);
+    logger.info(rm_url);
     
     fetch(rm_url)
         .then(res => res.text())
@@ -229,7 +250,7 @@ function request_show(show){
             xml2js.parseStringPromise(text).then(function (job) {
                 if(job.response.job_id !== undefined ){
                     show.job_id=job.response.job_id[0];
-                    console.log('RM JobID',show.job_id);
+                    logger.info('RM JobID',show.job_id);
                     if(!jobIdExist(job.response.job_id[0])){
                         processingQueue.push(show);
                     }else{
@@ -244,7 +265,7 @@ function request_show(show){
             });
         })
 
-    //console.log(rm_url);
+    //logger.info(rm_url);
 
 }
 
@@ -258,10 +279,10 @@ function jobIdExist(job_id){
 }
 
 function processFile(filePath){
-    console.log('FILE UPLOADED');
-    console.log(filePath);
+    logger.info('FILE UPLOADED');
+    logger.info(filePath);
     let fileName = filePath.replace(/^.*[\\\/]/, '');
-    console.log(path.parse(filePath).name);
+    logger.info(path.parse(filePath).name);
     if(path.parse(filePath).ext=='.mp3'){
 
         for(const show of processingQueue){
@@ -277,25 +298,25 @@ function processFile(filePath){
 }
 
 const uploadToMixcloud = async (show) =>{
-    console.log('Uploading To Mixcloud',show);
+    logger.info('Uploading To Mixcloud',show);
     getArtwork(show).then( () => {
         uploadToMixcloudGo(show).then(response => {
             //TODO Remove this item from processingQueue
-            console.log(response);
+            logger.info(response);
             return true;
             if (response.data.result.success) {
-                console.log('show uploaded');
+                logger.info('show uploaded');
             }else{
-                console.log('Error uploading show');
+                logger.info('Error uploading show');
             }
         }).catch(error => {
-            console.log(error)
+            logger.info(error)
         });
     })
 }
 
 const getArtwork = async (show) => {
-    console.log('Get Artwork',show.show.image_url);
+    logger.info('Get Artwork',show.show.image_url);
     const imgPath = path.resolve(__dirname, 'images', show.show.id+'.jpg');
     let urlf = show.show.image_url;
     let url = urlf.replace("-150x150", "");
@@ -322,7 +343,7 @@ const getArtwork = async (show) => {
 
 
 const uploadToMixcloudGo = async (show) => {
-    console.log('Uploading To Mixcloud GO',show);
+    logger.info('Uploading To Mixcloud GO',show);
     try {
         let audio = process.cwd() + "/ftp/"+show.job_id+'.mp3';
         let image = process.cwd() + "/images/"+show.show.id+'.jpg';
