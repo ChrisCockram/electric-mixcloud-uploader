@@ -34,8 +34,8 @@ const app = express();
 const port = process.env.SERVER_PORT;
 
 logger.info(port);
-logger.info(FTP_PORT);
-logger.info(RADIO_API);
+logger.info(process.env.FTP_PORT);
+logger.info(process.env.RADIO_API);
 
 const version = process.env.npm_package_version;
 
