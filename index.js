@@ -149,6 +149,7 @@ readData();
 const hostname = '0.0.0.0';
 const server = new FtpSvr({
     url: 'ftp://' + hostname + ':' + process.env.FTP_PORT,
+    pasv_url: process.env.FTP_PASSIVE_URL,
     pasv_min: process.env.FTP_PORT,
     greeting: ['Welcome', 'to', 'the', 'jungle!'],
     file_format: 'ep',
