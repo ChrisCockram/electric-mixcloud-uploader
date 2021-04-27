@@ -33,6 +33,10 @@ const logger = log4js.getLogger();
 const app = express();
 const port = process.env.SERVER_PORT;
 
+logger.info(port);
+logger.info(FTP_PORT);
+logger.info(RADIO_API);
+
 const version = process.env.npm_package_version;
 
 let processingQueue=[];
@@ -123,6 +127,8 @@ app.get('/mixcloudauth', function(request, response) {
 app.use(express.static('public'));
 app.listen(port, () => {
     logger.info(`listening on port ${port}!`)
+    logger.info(port);
+    logger.info(process.env.SERVER_PORT);
 })
 
 settings={
