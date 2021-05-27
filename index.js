@@ -190,18 +190,18 @@ function processFile(filePath){
                     show.status = 'Uploading';
                     show.uploadsize=getFilesizeInBytes('./ftp/'+filePath);
                     show.uploadsizecheck=0;
-                    logger.info('File:'+filePath+' File Size:'+show.uploadsize+' Upload Size Check:'+uploadsizecheck);
+                    logger.info('File:'+filePath+' File Size:'+show.uploadsize+' Upload Size Check:'+show.uploadsizecheck);
                     console.log('uploadsizecheck',show.uploadsizecheck,show.uploadsize);
                 }else{
                     if(show.uploadsize==getFilesizeInBytes('./ftp/'+filePath)){
                         show.uploadsizecheck=show.uploadsizecheck+1;
                         console.log('uploadsizecheck',show.uploadsizecheck,show.uploadsize);
-                        logger.info('File:'+filePath+' File Size:'+show.uploadsize+' Upload Size Check:'+uploadsizecheck);
+                        logger.info('File:'+filePath+' File Size:'+show.uploadsize+' Upload Size Check:'+show.uploadsizecheck);
 
                     }
                     if(show.uploadsizecheck==5){
                         console.log('uploadsizecheck',show.uploadsizecheck,show.uploadsize);
-                        logger.info('File:'+filePath+' File Size:'+show.uploadsize+' Upload Size Check:'+uploadsizecheck);
+                        logger.info('File:'+filePath+' File Size:'+show.uploadsize+' Upload Size Check:'+show.uploadsizecheck);
                         logger.info('File Upload Complete:'+filePath);
                         show.status='File Received';
                         uploadToMixcloud(show);
