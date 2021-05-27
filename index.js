@@ -1,5 +1,4 @@
 const express = require('express');
-const FtpSvr = require ( 'ftp-srv' );
 const fetch = require('node-fetch');
 const moment = require('moment');
 const xml2js = require ('xml2js');
@@ -145,35 +144,25 @@ function readData(){
 }
 readData();
 
+
+
 //FTP
-const hostname = '0.0.0.0';
-const server = new FtpSvr({
-    url: 'ftp://' + hostname + ':' + process.env.FTP_PORT,
-    pasv_url: process.env.FTP_PASSIVE_URL,
-    pasv_min: process.env.FTP_PORT,
-    greeting: ['Welcome', 'to', 'the', 'jungle!'],
-    file_format: 'ep',
-});
+function checkFTP(){
+    const testFolder = './ftp/';
+    const fs = require('fs');
+    fs.readdirSync(testFolder).forEach(file => {
+        logger.info(file);
+        console.log(file);
+        var fileid = file.replace(/\.[^/.]+$/, "");
+        console.log(fileid);
+        if(jobIdExist(fileid)){
+            console.log('File Exists!');
+            processFile(file);
+        }
+    });
+}
 
-server.on('login', ({ connection, username, password }, resolve, reject) => {
-    if (username === process.env.FTP_USERNAME && password === process.env.FTP_PASSWORD) {
-        resolve({root: __dirname+'/ftp'});
-
-        // If connected, add a handler to confirm file uploads
-        connection.on('STOR', (error, fileName) => {
-            if (error) {
-                console.error(`FTP server error: could not receive file ${fileName} for upload ${error}`);
-            }
-            processFile(fileName);
-            console.info(`FTP server: upload successfully received - ${fileName}`);
-        });
-        resolve();
-    } else {
-        reject(new Error('Unable to authenticate with FTP server: bad username or password'));
-    }
-});
-server.listen();
-
+const interval = setInterval(checkFTP, 5000);
 
 let current_show= {
     date: "2021-03-29",
@@ -201,7 +190,6 @@ let current_show= {
     split: false,
     override: false
 };
-
 //current_show=false;
 //Get Current Show
 
@@ -249,7 +237,7 @@ function request_show(show){
     let rm_url = 'http://localhost:8000/test.xml';
 
     logger.info(rm_url);
-    
+
     fetch(rm_url)
         .then(res => res.text())
         .then(text => {
@@ -257,6 +245,7 @@ function request_show(show){
             xml2js.parseStringPromise(text).then(function (job) {
                 if(job.response.job_id !== undefined ){
                     show.job_id=job.response.job_id[0];
+                    show.status=false;
                     logger.info('RM JobID',show.job_id);
                     if(!jobIdExist(job.response.job_id[0])){
                         processingQueue.push(show);
@@ -291,16 +280,17 @@ function processFile(filePath){
     let fileName = filePath.replace(/^.*[\\\/]/, '');
     logger.info(path.parse(filePath).name);
     if(path.parse(filePath).ext=='.mp3'){
-
         for(const show of processingQueue){
             if(show.job_id==path.parse(filePath).name){
-                //is there a jingle to add?
-                uploadToMixcloud(show);
+                if(show.status==false) {
+                    show.status='File Received';
+                    //is there a jingle to add?
+                    uploadToMixcloud(show);
+                }
             }
         }
-        console.error('job_id not matched');
     }else{
-        console.error('Unexpected file type');
+        logger.error('Unexpected file type'+filePath);
     }
 }
 
@@ -310,9 +300,18 @@ const uploadToMixcloud = async (show) =>{
         uploadToMixcloudGo(show).then(response => {
             //TODO Remove this item from processingQueue
             logger.info(response);
+            console.log(show);
             return true;
             if (response.data.result.success) {
                 logger.info('show uploaded');
+                //remove file from FTP.
+                console.log('remove file!');
+                try {
+                    fs.unlinkSync('./ftp/'+show.job_id+'.mp3');
+                    fs.unlinkSync('./images/'+show.show.id+'.jpg');
+                } catch(err) {
+                    console.error(err)
+                }
             }else{
                 logger.info('Error uploading show');
             }
@@ -320,6 +319,7 @@ const uploadToMixcloud = async (show) =>{
             logger.info(error)
         });
     })
+
 }
 
 const getArtwork = async (show) => {
@@ -346,9 +346,6 @@ const getArtwork = async (show) => {
     //TODO Download Artwork
 }
 
-
-
-
 const uploadToMixcloudGo = async (show) => {
     logger.info('Uploading To Mixcloud GO',show);
     try {
@@ -372,8 +369,10 @@ const uploadToMixcloudGo = async (show) => {
             "Content-Length": formData.getLengthSync()
         };
 
-        //return true;
         // Now send the request
+        console.log('SENDING AUDIO NOW');
+        return true;
+
         return axios.post("https://api.mixcloud.com/upload/?access_token="+process.env.MIXCLOUD_API_ACCESS_TOKEN, formData, {headers});
     } catch (error) {
         console.error(error)
@@ -386,4 +385,4 @@ function getExtension(filename) {
 }
 
 getShow();
-//setInterval(getShow, 1000);
+//setInterval(getShow, 60000);
