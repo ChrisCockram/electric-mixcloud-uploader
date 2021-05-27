@@ -1,18 +1,12 @@
-//const express = require('express');
 const fetch = require('node-fetch');
 const moment = require('moment');
 const xml2js = require ('xml2js');
 const path = require('path');
 const axios = require('axios');
 const fs = require('fs');
-const crypto = require('crypto');
-const hash = crypto.createHash('sha256');
-//const session = require('express-session');
-//const bodyParser = require('body-parser');
 const FormData = require('form-data');
 const followRedirects = require('follow-redirects');
 const log4js = require("log4js");
-const readLastLines = require('read-last-lines');
 
 followRedirects.maxRedirects = 10;
 followRedirects.maxBodyLength = 500 * 1024 * 1024 * 1024; // 500 GB
@@ -29,113 +23,16 @@ log4js.configure({
 });
 const logger = log4js.getLogger();
 
-const port = process.env.SERVER_PORT;
-
-logger.info(port);
-logger.info(process.env.FTP_PORT);
 logger.info(process.env.RADIO_API);
-
 const version = process.env.npm_package_version;
-
-let processingQueue=[];
-
-
 logger.info('Software Version',version);
-
-/*
-const app = express();
-app.use(session({
-    secret: 'secret',
-    resave: true,
-    saveUninitialized: true
-}));
-app.use(bodyParser.urlencoded({extended : true}));
-app.use(bodyParser.json());
-app.post('/auth', function(request, response) {
-    let username = request.body.username;
-    let password = request.body.password;
-    if (username && password) {
-        hashedPassword=crypto.createHash('sha256').update(password).digest('hex');
-        logger.info(hashedPassword);
-        if(hashedPassword === process.env.LOGIN_PASSWORD && username === process.env.LOGIN_USERNAME){
-            request.session.loggedin = true;
-            request.session.username = username;
-            response.redirect('/admin');
-        }else{
-            response.send('Incorrect Username and/or Password!');
-        }
-        response.end();
-    } else {
-        response.send('Please enter Username and Password!');
-        response.end();
-    }
-});
-app.get('/admin', function(request, response) {
-    try {
-        if (request.session.loggedin) {
-
-            readLastLines.read('output.log', 50)
-                .then((lines) =>{
-                    const log = fs.readFileSync('output.log', 'utf8')
-                    let html ='<h1>Electric MixCloud Uploader</h1>';
-                    html+='<br><a href="https://www.mixcloud.com/oauth/authorize?client_id=HzP4JwtYJaE8skCdgv&redirect_uri=http://mixcloud.electricradio.co.uk/mixcloudauth">Link Mixcloud</a>';
-                    html+='<br><br><textarea style="width:800px; height: 400px;">'+log+'</textarea>';
-                    response.send(html);
-                    response.end();
-
-                });
-
-        } else {
-            response.redirect('/');
-            response.end();
-
-        }
-    } catch (error) {
-        response.redirect('/');
-        response.end();
-        return false;
-    }
-});
-app.get('/mixcloudauth', function(request, response) {
-    logger.info(request.query.code);
-    try {
-        if (request.session.loggedin) {
-            OAUTH_CODE=request.query.code
-            let url = "https://www.mixcloud.com/oauth/access_token?client_id="+process.env.MIXCLOUD_API_CLIENT_ID+"&redirect_uri=http://mixcloud.electricradio.co.uk/mixcloudauth&client_secret="+process.env.MIXCLOUD_API_CLIENT_SECRET+"&code="+OAUTH_CODE;
-            fetch(url, { method: "Get" })
-                .then(res => res.json())
-                .then((json) => {
-                    if(json.access_token != undefined){
-                        process.env.MIXCLOUD_API_ACCESS_TOKEN = json.access_token;
-                        response.send(process.env.MIXCLOUD_API_ACCESS_TOKEN);
-                        response.end();
-                    }else{
-                        response.send('Error getting Access Token');
-                        response.end();
-                    }
-
-                });
-        } else {
-            response.send('Please login to view this page!');
-            response.end();
-        }
-    } catch (error) {
-        response.send('Please login to view this page!');
-        response.end();
-        return false;
-    }
-});
-app.use(express.static('public'));
-app.listen(port, () => {
-    logger.info(`listening on port ${port}!`)
-    logger.info(port);
-    logger.info(process.env.SERVER_PORT);
-})
-*/
+let processingQueue=[];
 
 settings={
     "exclude":['0000','0001']
 };
+
+//Load Settings
 function readData(){
     if(fs.existsSync('settings.json')){
         fs.readFile('settings.json', (err, data) => {
@@ -146,8 +43,6 @@ function readData(){
     }
 }
 readData();
-
-
 
 //FTP
 function checkFTP(){
@@ -277,6 +172,12 @@ function jobIdExist(job_id){
     return false;
 }
 
+function getFilesizeInBytes(filename) {
+    let stats = fs.statSync(filename);
+    let fileSizeInBytes = stats.size;
+    return fileSizeInBytes;
+}
+
 function processFile(filePath){
     logger.info('FILE UPLOADED');
     logger.info(filePath);
@@ -286,9 +187,21 @@ function processFile(filePath){
         for(const show of processingQueue){
             if(show.job_id==path.parse(filePath).name){
                 if(show.status==false) {
-                    show.status='File Received';
-                    //is there a jingle to add?
-                    uploadToMixcloud(show);
+                    console.log('filefound');
+                    show.status = 'Uploading';
+                    show.uploadsize=getFilesizeInBytes('./ftp/'+filePath);
+                    show.uploadsizecheck=0;
+                    console.log('uploadsizecheck',show.uploadsizecheck,show.uploadsize);
+                }else{
+                    if(show.uploadsize==getFilesizeInBytes('./ftp/'+filePath)){
+                        show.uploadsizecheck=show.uploadsizecheck+1;
+                        console.log('uploadsizecheck',show.uploadsizecheck,show.uploadsize);
+                    }
+                    if(show.uploadsizecheck==5){
+                        console.log('uploadsizecheck',show.uploadsizecheck,show.uploadsize);
+                        show.status='File Received';
+                        uploadToMixcloud(show);
+                    }
                 }
             }
         }
