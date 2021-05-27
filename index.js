@@ -63,7 +63,7 @@ function checkFTP(){
 const interval = setInterval(checkFTP, 5000);
 
 let current_show= {
-    date: "2021-03-29",
+    date: "2021-05-25",
     start: "10:00",
     end: "11:00",
     show: {
@@ -290,9 +290,7 @@ const uploadToMixcloudGo = async (show) => {
         };
 
         // Now send the request
-        console.log('SENDING AUDIO NOW');
-        return true;
-
+        logger.info('Uploading to MixCloud');
         return axios.post("https://api.mixcloud.com/upload/?access_token="+process.env.MIXCLOUD_API_ACCESS_TOKEN, formData, {headers});
     } catch (error) {
         console.error(error)
