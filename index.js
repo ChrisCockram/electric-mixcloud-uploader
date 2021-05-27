@@ -1,4 +1,4 @@
-const express = require('express');
+//const express = require('express');
 const fetch = require('node-fetch');
 const moment = require('moment');
 const xml2js = require ('xml2js');
@@ -42,6 +42,8 @@ let processingQueue=[];
 
 
 logger.info('Software Version',version);
+
+/*
 app.use(session({
     secret: 'secret',
     resave: true,
@@ -129,6 +131,7 @@ app.listen(port, () => {
     logger.info(port);
     logger.info(process.env.SERVER_PORT);
 })
+*/
 
 settings={
     "exclude":['0000','0001']
