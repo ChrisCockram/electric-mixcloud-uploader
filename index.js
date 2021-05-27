@@ -29,7 +29,6 @@ log4js.configure({
 });
 const logger = log4js.getLogger();
 
-const app = express();
 const port = process.env.SERVER_PORT;
 
 logger.info(port);
@@ -44,6 +43,7 @@ let processingQueue=[];
 logger.info('Software Version',version);
 
 /*
+const app = express();
 app.use(session({
     secret: 'secret',
     resave: true,
