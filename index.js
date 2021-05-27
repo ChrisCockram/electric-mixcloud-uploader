@@ -7,7 +7,7 @@ const axios = require('axios');
 const fs = require('fs');
 const crypto = require('crypto');
 const hash = crypto.createHash('sha256');
-const session = require('express-session');
+//const session = require('express-session');
 const bodyParser = require('body-parser');
 const FormData = require('form-data');
 const followRedirects = require('follow-redirects');
@@ -237,7 +237,7 @@ function request_show(show){
     //let rm_url = 'http://radiomonitor.com/api/thisiselectric/?action=create_job&key='+process.env.RADIO_MONITOR_API+'&start_timestamp='+start.format('YYYYMMDDhhmmss')+'&end_timestamp='+end.format('YYYYMMDDhhmmss');
 
     //TESTING URL;
-    let rm_url = 'http://localhost:8000/test.xml';
+    let rm_url = 'http://151.80.42.167/sams/test.xml';
 
     logger.info(rm_url);
 
