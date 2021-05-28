@@ -41,7 +41,7 @@ function readData(){
     }
 }
 readData();
-const interval = setInterval(readData, 5000);
+const settingInterval = setInterval(readData, 5000);
 
 
 //FTP
@@ -57,7 +57,7 @@ function checkFTP(){
     });
 }
 
-const interval = setInterval(checkFTP, 5000);
+const checkFTPInterval = setInterval(checkFTP, 5000);
 
 let current_show= {
     date: "2021-05-27",
