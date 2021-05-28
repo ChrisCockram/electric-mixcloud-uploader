@@ -49,12 +49,9 @@ function checkFTP(){
     const testFolder = './ftp/';
     const fs = require('fs');
     fs.readdirSync(testFolder).forEach(file => {
-        logger.info(file);
-        console.log(file);
         var fileid = file.replace(/\.[^/.]+$/, "");
         console.log(fileid);
         if(jobIdExist(fileid)){
-            console.log('File Exists!');
             processFile(file);
         }
     });
@@ -63,7 +60,7 @@ function checkFTP(){
 const interval = setInterval(checkFTP, 5000);
 
 let current_show= {
-    date: "2021-05-25",
+    date: "2021-05-27",
     start: "10:00",
     end: "11:00",
     show: {
@@ -88,9 +85,8 @@ let current_show= {
     split: false,
     override: false
 };
-//current_show=false;
+current_show=false;
 //Get Current Show
-
 function getShow(){
     if(!process.env.MIXCLOUD_API_ACCESS_TOKEN) {
         logger.info('Mixcloud API not set');
@@ -99,8 +95,6 @@ function getShow(){
     fetch(process.env.RADIO_API, { method: "Get" })
         .then(res => res.json())
         .then((json) => {
-            //logger.info(json.broadcast.current_show);
-            //logger.info('current_show');
             if(current_show==false){
                 current_show=json.broadcast.current_show;
             }else {
@@ -119,27 +113,19 @@ function request_show(show){
         logger.info('This show is on the excluded list');
         return false;
     }
-
     start = moment(new Date(show.date +' '+show.start));
     end = moment(new Date(show.date +' '+show.end));
     show.start_date=start;
     if(show.end<show.start){
         end.add(1, 'day');
     }
-
-    //logger.info(moment(start).format('MMMM Do YYYY, h:mm:ss a'));
-
-    //let rm_url = 'http://radiomonitor.com/api/thisiselectric/?action=create_job&key='+process.env.RADIO_MONITOR_API+'&start_timestamp='+start.format('YYYYMMDDhhmmss')+'&end_timestamp='+end.format('YYYYMMDDhhmmss');
-
+    let rm_url = 'http://radiomonitor.com/api/thisiselectric/?action=create_job&key='+process.env.RADIO_MONITOR_API+'&start_timestamp='+start.format('YYYYMMDDhhmmss')+'&end_timestamp='+end.format('YYYYMMDDhhmmss');
     //TESTING URL;
-    let rm_url = 'http://151.80.42.167/sams/test.xml';
-
+    //let rm_url = 'http://151.80.42.167/sams/test.xml';
     logger.info(rm_url);
-
     fetch(rm_url)
         .then(res => res.text())
         .then(text => {
-
             xml2js.parseStringPromise(text).then(function (job) {
                 if(job.response.job_id !== undefined ){
                     show.job_id=job.response.job_id[0];
@@ -158,9 +144,6 @@ function request_show(show){
                 console.error('Failed to parse XML',text);
             });
         })
-
-    //logger.info(rm_url);
-
 }
 
 function jobIdExist(job_id){
@@ -172,7 +155,28 @@ function jobIdExist(job_id){
     return false;
 }
 
+function fileExists(filePath){
+    try {
+        if (fs.existsSync(filePath)) {
+            return true;
+        }
+    } catch(err) {
+        return false
+    }
+}
+
+function removeFromProcessingQueue(job_id){
+    for (var i = processingQueue.length - 1; i >= 0; i--) {
+        if (processingQueue[i]['job_id'] === job_id) {
+            processingQueue.splice(i, 1);
+        }
+    }
+}
+
 function getFilesizeInBytes(filename) {
+    if(!fileExists(filename)){
+        return false;
+    }
     let stats = fs.statSync(filename);
     let fileSizeInBytes = stats.size;
     return fileSizeInBytes;
@@ -193,11 +197,16 @@ function processFile(filePath){
                     logger.info('File:'+filePath+' File Size:'+show.uploadsize+' Upload Size Check:'+show.uploadsizecheck);
                     console.log('uploadsizecheck',show.uploadsizecheck,show.uploadsize);
                 }else{
+                    console.log('Status isnt false');
+                    console.log('uploadsizecheck>',show.uploadsizecheck,show.uploadsize,getFilesizeInBytes('./ftp/'+filePath));
+
                     if(show.uploadsize==getFilesizeInBytes('./ftp/'+filePath)){
                         show.uploadsizecheck=show.uploadsizecheck+1;
                         console.log('uploadsizecheck',show.uploadsizecheck,show.uploadsize);
                         logger.info('File:'+filePath+' File Size:'+show.uploadsize+' Upload Size Check:'+show.uploadsizecheck);
 
+                    }else{
+                        show.uploadsize=getFilesizeInBytes('./ftp/'+filePath);
                     }
                     if(show.uploadsizecheck==5){
                         console.log('uploadsizecheck',show.uploadsizecheck,show.uploadsize);
@@ -218,12 +227,11 @@ const uploadToMixcloud = async (show) =>{
     logger.info('Uploading To Mixcloud',show);
     getArtwork(show).then( () => {
         uploadToMixcloudGo(show).then(response => {
-            //TODO Remove this item from processingQueue
             logger.info(response);
             console.log(show);
-            return true;
             if (response.data.result.success) {
                 logger.info('show uploaded');
+                removeFromProcessingQueue(show.job_id);
                 //remove file from FTP.
                 console.log('remove file!');
                 try {
@@ -291,6 +299,7 @@ const uploadToMixcloudGo = async (show) => {
 
         // Now send the request
         logger.info('Uploading to MixCloud');
+        //return true;
         return axios.post("https://api.mixcloud.com/upload/?access_token="+process.env.MIXCLOUD_API_ACCESS_TOKEN, formData, {headers});
     } catch (error) {
         console.error(error)

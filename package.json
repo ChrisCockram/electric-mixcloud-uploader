@@ -1,7 +1,7 @@
 {
   "name": "electric-mixcloud-uploader",
-  "version": "1.0.0",
-  "description": "",
+  "version": "1.0.1",
+  "description": "App to upload the latest Electric Radio Shows to MixCloud",
   "main": "index.js",
   "scripts": {
     "nodemon": "nodemon index.js",
@@ -12,8 +12,6 @@
   "license": "ISC",
   "dependencies": {
     "axios": "^0.21.1",
-    "basic-ftp": "^4.6.6",
-    "crypto": "^1.0.1",
     "dotenv": "^8.2.0",
     "form-data": "^4.0.0",
     "ftp": "^0.3.10",
