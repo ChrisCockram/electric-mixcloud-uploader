@@ -1,0 +1,10 @@
+{
+  "exclude":[9358],
+  "MIXCLOUD_API_ACCESS_TOKEN":"",
+  "MIXCLOUD_API_CLIENT_ID":"",
+  "MIXCLOUD_API_CLIENT_SECRET":"",
+  "RADIO_MONITOR_API":"",
+  "RADIO_API":"",
+  "LOGIN_USERNAME":"admin",
+  "LOGIN_PASSWORD":""
+}

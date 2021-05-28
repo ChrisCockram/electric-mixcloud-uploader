@@ -23,7 +23,6 @@ log4js.configure({
 });
 const logger = log4js.getLogger();
 
-logger.info(process.env.RADIO_API);
 const version = process.env.npm_package_version;
 logger.info('Software Version',version);
 let processingQueue=[];
@@ -38,11 +37,12 @@ function readData(){
         fs.readFile('settings.json', (err, data) => {
             if (err) throw err;
             settings = JSON.parse(data);
-
         });
     }
 }
 readData();
+const interval = setInterval(readData, 5000);
+
 
 //FTP
 function checkFTP(){
@@ -88,11 +88,11 @@ let current_show= {
 current_show=false;
 //Get Current Show
 function getShow(){
-    if(!process.env.MIXCLOUD_API_ACCESS_TOKEN) {
+    if(!settings.MIXCLOUD_API_ACCESS_TOKEN) {
         logger.info('Mixcloud API not set');
         return false;
     }
-    fetch(process.env.RADIO_API, { method: "Get" })
+    fetch(settings.RADIO_API, { method: "Get" })
         .then(res => res.json())
         .then((json) => {
             if(current_show==false){
@@ -119,7 +119,7 @@ function request_show(show){
     if(show.end<show.start){
         end.add(1, 'day');
     }
-    let rm_url = 'http://radiomonitor.com/api/thisiselectric/?action=create_job&key='+process.env.RADIO_MONITOR_API+'&start_timestamp='+start.format('YYYYMMDDhhmmss')+'&end_timestamp='+end.format('YYYYMMDDhhmmss');
+    let rm_url = 'http://radiomonitor.com/api/thisiselectric/?action=create_job&key='+settings.RADIO_MONITOR_API+'&start_timestamp='+start.format('YYYYMMDDhhmmss')+'&end_timestamp='+end.format('YYYYMMDDhhmmss');
     //TESTING URL;
     //let rm_url = 'http://151.80.42.167/sams/test.xml';
     logger.info(rm_url);
@@ -300,7 +300,7 @@ const uploadToMixcloudGo = async (show) => {
         // Now send the request
         logger.info('Uploading to MixCloud');
         //return true;
-        return axios.post("https://api.mixcloud.com/upload/?access_token="+process.env.MIXCLOUD_API_ACCESS_TOKEN, formData, {headers});
+        return axios.post("https://api.mixcloud.com/upload/?access_token="+settings.MIXCLOUD_API_ACCESS_TOKEN, formData, {headers});
     } catch (error) {
         console.error(error)
     }
