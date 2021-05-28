@@ -227,7 +227,7 @@ const uploadToMixcloud = async (show) =>{
     logger.info('Uploading To Mixcloud',show);
     getArtwork(show).then( () => {
         uploadToMixcloudGo(show).then(response => {
-            logger.info(response);
+            //logger.info(response);
             console.log(show);
             if (response.data.result.success) {
                 logger.info('show uploaded');

@@ -1,6 +1,6 @@
 <?php
     session_start();
-    if($_SESSION['valid']){
+    if(isset($_SESSION['valid'])&&$_SESSION['valid']){
 	    function saveSettings($key,$value){
 		    $settings=getSettings();
 		    $settings->$key=$value;
@@ -27,25 +27,48 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" integrity="sha512-iBBXm8fW90+nuLcSKlbmrPcLa0OT92xO1BIsZ+ywDWZCvqsWgccV3gFoRBv0z+8dLJgyAHIhR35VZc2oM/gI1w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
-
-    <title>Hello, world!</title>
+    <style>
+        .logs{
+            list-style-type: none;
+        }
+        .logs li{
+            background: lightgreen;
+            margin: 5px 5px 5px 0px;
+            padding: 5px;
+            color: darkslategrey;
+        }
+    </style>
+    <title>Mixcloud Settings</title>
 </head>
 <body>
 
-
+<br>
 <div class="container">
     <div class="row">
         <div class="col">
         </div>
         <div class="col">
             <?php
-            if($_SESSION['valid']){
+            if(isset($_SESSION['valid'])&&$_SESSION['valid']){
                 ?>
+                    <h1>Mixcloud Settings</h1>
+                    <div class="mb-3">
+                        <a href="auth.php"><button class="btn btn-danger"><i class="fas fa-sign-out-alt"></i> Log Out</button> </a>
+                    </div>
+                    <br>
+                    <form >
+                        <div class="mb-3">
+                            <a href="https://www.mixcloud.com/oauth/authorize?client_id=HzP4JwtYJaE8skCdgv&redirect_uri=http://mixcloud.electricradio.co.uk/mixcloudauth"><button id="LinkMixcloudButton" class="btn btn-primary"><i class="fab fa-mixcloud"></i> Link Mixcloud</button></a>
+                            <lable for="LinkMixcloudButton">Link the MixCloud account you wish to upload to.</lable>
+                        </div>
+                    </form>
 
-                <a href="https://www.mixcloud.com/oauth/authorize?client_id=HzP4JwtYJaE8skCdgv&redirect_uri=http://mixcloud.electricradio.co.uk/mixcloudauth"><button class="btn btn-primary"><i class="fab fa-mixcloud"></i> Link Mixcloud</button>
-                </a>
-
-
+                    <h2>Logs</h2>
+                    <div class="mb-3">
+                        <div style="height: 300px; overflow-y: scroll; display: flex; flex-direction: column-reverse;">
+                            <?php include_once ('logs.php')?>
+                        </div>
+                    </div>
 
                 <?php
             }else{
@@ -63,6 +86,8 @@
                 </div>
                 <button type="submit" class="btn btn-primary">Submit</button>
             </form>
+
+
 	            <?php
             }
             ?>

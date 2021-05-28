@@ -1,6 +1,10 @@
 <?php
 	session_start();
-
+	if(!isset($_POST['username'])){
+		unset($_SESSION["valid"]);
+		header('Location: index.php');
+		exit();
+	}
 	$settings = file_get_contents("../settings.json");
 	$settings = json_decode($settings);
 	//print_r($settings);
