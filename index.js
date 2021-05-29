@@ -35,7 +35,10 @@ let settings={
 function readData(){
     logger.info('Loading Settings');
     if(fs.existsSync('settings.json')){
+        logger.info('settings.json found');
         fs.readFile('settings.json', (err, data) => {
+            logger.info('settings.json read');
+
             if (err){
                 logger.info(err);
                 throw err;
