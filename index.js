@@ -33,12 +33,8 @@ let settings={
 
 //Load Settings
 function readData(){
-    logger.info('Loading Settings');
     if(fs.existsSync('settings.json')){
-        logger.info('settings.json found');
         fs.readFile('settings.json', (err, data) => {
-            logger.info('settings.json read');
-
             if (err){
                 logger.info(err);
                 throw err;
@@ -46,7 +42,6 @@ function readData(){
             settings = JSON.parse(data);
         });
     }else {
-        logger.info('settings.json not found!');
     }
 }
 readData();
@@ -322,4 +317,4 @@ function getExtension(filename) {
 }
 
 getShow();
-//setInterval(getShow, 60000);
+setInterval(getShow, 60000);
