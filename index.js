@@ -35,7 +35,10 @@ settings={
 function readData(){
     if(fs.existsSync('settings.json')){
         fs.readFile('settings.json', (err, data) => {
-            if (err) throw err;
+            if (err){
+                logger.info(err);
+                throw err;
+            }
             settings = JSON.parse(data);
         });
     }
@@ -89,6 +92,7 @@ current_show=false;
 //Get Current Show
 function getShow(){
     if(!settings.MIXCLOUD_API_ACCESS_TOKEN) {
+        logger.info(settings);
         logger.info('Mixcloud API not set');
         return false;
     }
