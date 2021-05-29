@@ -41,6 +41,8 @@ function readData(){
             }
             settings = JSON.parse(data);
         });
+    }else {
+        logger.warn('settings.json not found!');
     }
 }
 readData();
