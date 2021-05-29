@@ -33,6 +33,7 @@ settings={
 
 //Load Settings
 function readData(){
+    logger.info('Loading Settings');
     if(fs.existsSync('settings.json')){
         fs.readFile('settings.json', (err, data) => {
             if (err){
@@ -42,7 +43,7 @@ function readData(){
             settings = JSON.parse(data);
         });
     }else {
-        logger.warn('settings.json not found!');
+        logger.info('settings.json not found!');
     }
 }
 readData();
