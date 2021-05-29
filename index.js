@@ -27,7 +27,7 @@ const version = process.env.npm_package_version;
 logger.info('Software Version',version);
 let processingQueue=[];
 
-settings={
+let settings={
     "exclude":['0000','0001']
 };
 
