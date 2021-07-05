@@ -11,7 +11,7 @@ ps.lookup({
 
             //console.log( 'PID: %s, COMMAND: %s, ARGUMENTS: %s', process.pid, process.command, process.arguments );
 
-            if(process.arguments[0]==='index.js'){
+            if(process.arguments[0]==='electric-mixcloud-uploader.js'){
                 console.log('KILL',process.pid);
 
                 ps.kill(process.pid, function( err ) {
