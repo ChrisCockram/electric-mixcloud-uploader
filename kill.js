@@ -1,5 +1,6 @@
 var ps = require('ps-node');
 console.log('KILL Node Processes');
+print('KILL Node Processes');
 
 ps.lookup({
     command: 'node',
