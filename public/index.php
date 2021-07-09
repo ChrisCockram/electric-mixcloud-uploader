@@ -16,9 +16,7 @@
 	    }
 	    $settings=getSettings();
     }
-
     ?>
-
 <!doctype html>
 <html lang="en">
 <head>
@@ -27,17 +25,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" integrity="sha512-iBBXm8fW90+nuLcSKlbmrPcLa0OT92xO1BIsZ+ywDWZCvqsWgccV3gFoRBv0z+8dLJgyAHIhR35VZc2oM/gI1w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
-    <style>
-        .logs{
-            list-style-type: none;
-        }
-        .logs li{
-            background: lightgreen;
-            margin: 5px 5px 5px 0px;
-            padding: 5px;
-            color: darkslategrey;
-        }
-    </style>
+    <link rel="stylesheet" href="default.css">
     <title>Mixcloud Settings</title>
 </head>
 <body>
@@ -45,8 +33,7 @@
 <br>
 <div class="container">
     <div class="row">
-        <div class="col">
-        </div>
+
         <div class="col">
             <?php
             if(isset($_SESSION['valid'])&&$_SESSION['valid']){
@@ -62,6 +49,9 @@
                             <lable for="LinkMixcloudButton">Link the MixCloud account you wish to upload to.</lable>
                         </div>
                     </form>
+
+                    <h2>Shows</h2>
+	                <?php include_once ('shows.php')?>
 
                     <h2>Logs</h2>
                     <div class="mb-3">
@@ -92,19 +82,19 @@
             }
             ?>
 
-
-
-
-
-
         </div>
-        <div class="col">
-        </div>
+
     </div>
 </div>
 
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4" crossorigin="anonymous"></script>
+
+<script>
+    function update(id){
+        alert(id);
+    }
+</script>
 
 </body>
 </html>

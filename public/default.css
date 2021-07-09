@@ -1,0 +1,28 @@
+.logs{
+    list-style-type: none;
+}
+.logs li{
+    background: lightgreen;
+    margin: 5px 5px 5px 0px;
+    padding: 5px;
+    color: darkslategrey;
+}
+.show{
+    height: 170px;
+    width: 100%;
+    background: lightgray;
+}
+.showImage{
+    margin: 10px;
+    float:left;
+    height: 150px;
+    width: 150px;
+    background-size: cover;
+}
+.h3{
+
+}
+.showCheckbox{
+    height: 50px;
+    width: 50px;
+}

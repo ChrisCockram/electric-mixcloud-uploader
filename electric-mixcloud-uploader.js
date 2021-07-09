@@ -28,7 +28,7 @@ logger.info('Software Version',version);
 let processingQueue=[];
 
 let settings={
-    "exclude":['0000','0001']
+    include: []
 };
 
 //Load Settings
@@ -114,8 +114,8 @@ function getShow(){
 
 function request_show(show){
     logger.info('Requesting', show);
-    if(settings.exclude.includes(show.show.id)){
-        logger.info('This show is on the excluded list');
+    if(!settings.include.includes(show.show.id)){
+        logger.info('This show is not on the include list');
         return false;
     }
     start = moment(new Date(show.date +' '+show.start));
