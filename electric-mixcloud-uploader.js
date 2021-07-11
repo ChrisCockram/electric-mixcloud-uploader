@@ -27,7 +27,7 @@ const version = process.env.npm_package_version;
 logger.info('Software Version',version);
 let processingQueue=[];
 
-let settings={
+var settings={
     include: []
 };
 
@@ -41,12 +41,13 @@ function readData(){
             }
             settings = JSON.parse(data);
             logger.info('Settings Loaded')
-            logger.info(settings)
         });
     }else {
     }
 }
+
 readData();
+
 const settingInterval = setInterval(readData, 5000);
 
 
