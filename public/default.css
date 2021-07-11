@@ -7,6 +7,9 @@
     padding: 5px;
     color: darkslategrey;
 }
+.shows{
+    display: none!important;
+}
 .show{
     height: 170px;
     width: 100%;

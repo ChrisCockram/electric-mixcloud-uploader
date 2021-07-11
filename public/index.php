@@ -1,10 +1,10 @@
 <?php
     session_start();
     if(isset($_SESSION['valid'])&&$_SESSION['valid']){
+
 	    function saveSettings($key,$value){
 		    $settings=getSettings();
 		    $settings->$key=$value;
-		    print_r($settings);
 		    $fp = fopen('../settings.json', 'w');
 		    fwrite($fp, json_encode($settings));
 		    fclose($fp);
@@ -15,6 +15,29 @@
 		    return $settings;
 	    }
 	    $settings=getSettings();
+
+	    if(isset($_POST['showID'])){
+            if($_POST['active']=='true'){
+                if(!in_array($_POST['showID'],$settings->include)){
+		            $settings->include[]=$_POST['showID'];
+	                saveSettings('include',$settings->include);
+	                echo 'success';
+                }
+            }else{
+	            if(in_array($_POST['showID'],$settings->include)){
+                    $newarr=array();
+                    foreach ($settings->include as $id){
+                        if($id != $_POST['showID']){
+                            $newarr[]=$id;
+                        }
+                    }
+
+		            saveSettings('include',$newarr);
+		            echo 'success';
+	            }
+            }
+	        exit();
+	    }
     }
     ?>
 <!doctype html>
@@ -26,9 +49,11 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" integrity="sha512-iBBXm8fW90+nuLcSKlbmrPcLa0OT92xO1BIsZ+ywDWZCvqsWgccV3gFoRBv0z+8dLJgyAHIhR35VZc2oM/gI1w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
     <link rel="stylesheet" href="default.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <title>Mixcloud Settings</title>
 </head>
 <body>
+
 
 <br>
 <div class="container">
@@ -51,8 +76,9 @@
                     </form>
 
                     <h2>Shows</h2>
-	                <?php include_once ('shows.php')?>
 
+                    <div id="showsLoading">Loading Shows...</div>
+                    <div id="shows" style="display: none;"><?php include_once ('shows.php')?></div>
                     <h2>Logs</h2>
                     <div class="mb-3">
                         <div style="height: 300px; overflow-y: scroll; display: flex; flex-direction: column-reverse;">
@@ -87,14 +113,31 @@
     </div>
 </div>
 
-
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4" crossorigin="anonymous"></script>
-
 <script>
-    function update(id){
-        alert(id);
-    }
+    $( document ).ready(function() {
+        $("#showsLoading").slideUp(500);
+        $("#shows").slideDown(500);
+        console.log( "ready!" );
+    });
+
+    $('.showCheckbox').change(function() {
+        $.post("index.php",
+            {
+                showID:$(this).attr("showID"),
+                active:this.checked
+            },
+            function(data, status){
+                if(data!='success'){
+                    alert("Data: " + data + "\nStatus: " + status);
+                }
+            }
+        );
+    });
+
 </script>
+
+
 
 </body>
 </html>
