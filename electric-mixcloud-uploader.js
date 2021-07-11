@@ -113,7 +113,7 @@ function getShow(){
 }
 
 function request_show(show){
-    logger.info('Requesting', show);
+    logger.info('Requesting', show.show.name);
     if(!settings.include.includes(show.show.id)){
         logger.info('This show is not on the include list');
         return false;

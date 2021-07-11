@@ -75,16 +75,17 @@
                         </div>
                     </form>
 
-                    <h2>Shows</h2>
-
-                    <div id="showsLoading">Loading Shows...</div>
-                    <div id="shows" style="display: none;"><?php include_once ('shows.php')?></div>
                     <h2>Logs</h2>
                     <div class="mb-3">
                         <div style="height: 300px; overflow-y: scroll; display: flex; flex-direction: column-reverse;">
                             <?php include_once ('logs.php')?>
                         </div>
                     </div>
+
+                    <h2>Shows</h2>
+                    <div id="showsLoading">Loading Shows...</div>
+                    <div id="shows" style="display: none;"><?php include_once ('shows.php')?></div>
+
 
                 <?php
             }else{
