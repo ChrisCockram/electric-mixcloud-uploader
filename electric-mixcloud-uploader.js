@@ -40,7 +40,6 @@ function readData(){
                 throw err;
             }
             settings = JSON.parse(data);
-            logger.info('Settings Loaded')
         });
     }else {
     }
