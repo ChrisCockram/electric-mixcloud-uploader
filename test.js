@@ -34,5 +34,8 @@ if(show.end<show.start){
     end.add(1, 'day');
 }
 
+
+console.log(moment([2011, 2, 12]).isDST(),moment([2011, 2, 14]).isDST() );
+
 console.log(d);
 console.log(start.format('YYYYMMDDHHmmss'));
