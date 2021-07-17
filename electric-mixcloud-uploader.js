@@ -66,8 +66,34 @@ function checkFTP(){
 
 const checkFTPInterval = setInterval(checkFTP, 5000);
 
+current_show=show= {
+    date: "2021-07-17",
+    start: "20:00",
+    end: "21:00",
+    show: {
+        id: 10706,
+        name: "Sam Feldt",
+        slug: "anthems",
+        url: "https://electricradio.co.uk/show/anthems/",
+        latest: "",
+        website: "",
+        hosts: [ ],
+        producers: [ ],
+        genres: [
+            "Classic House"
+        ],
+        languages: [ ],
+        avatar_url: "https://electricradio.co.uk/wp-content/uploads/2020/12/Sam-Feldt-150x150.jpg",
+        image_url: "https://electricradio.co.uk/wp-content/uploads/2020/12/Sam-Feldt-150x150.jpg",
+        route: "https://electricradio.co.uk/feed/shows/?show=sam-feldt",
+        feed: "https://electricradio.co.uk/feed/shows/?show=sam-feldt"
+    },
+    encore: false,
+    split: false,
+    override: false
+};
 
-current_show=false;
+//current_show=false;
 //Get Current Show
 function getShow(){
     if(!settings.MIXCLOUD_API_ACCESS_TOKEN) {
@@ -102,6 +128,9 @@ function request_show(show){
     if(show.end<show.start){
         end.add(1, 'day');
     }
+    logger.info(new Date(show.date +' '+show.start));
+    logger.info(new Date(show.date +' '+show.end));
+    logger.info(start.format('YYYYMMDDHHmmss'));
     let rm_url = 'http://radiomonitor.com/api/thisiselectric/?action=create_job&key='+settings.RADIO_MONITOR_API+'&start_timestamp='+start.format('YYYYMMDDHHmmss')+'&end_timestamp='+end.format('YYYYMMDDHHmmss');
     logger.info(rm_url);
     fetch(rm_url)
