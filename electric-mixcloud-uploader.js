@@ -126,9 +126,7 @@ function request_show(show){
     if(show.end<show.start){
         end.add(1, 'day');
     }
-    let rm_url = 'http://radiomonitor.com/api/thisiselectric/?action=create_job&key='+settings.RADIO_MONITOR_API+'&start_timestamp='+start.format('YYYYMMDDhhmmss')+'&end_timestamp='+end.format('YYYYMMDDhhmmss');
-    //TESTING URL;
-    //let rm_url = 'http://151.80.42.167/sams/test.xml';
+    let rm_url = 'http://radiomonitor.com/api/thisiselectric/?action=create_job&key='+settings.RADIO_MONITOR_API+'&start_timestamp='+start.format('YYYYMMDDHHmmss')+'&end_timestamp='+end.format('YYYYMMDDHHmmss');
     logger.info(rm_url);
     fetch(rm_url)
         .then(res => res.text())
@@ -231,7 +229,7 @@ function processFile(filePath){
 }
 
 const uploadToMixcloud = async (show) =>{
-    logger.info('Uploading To Mixcloud',show);
+    logger.info('Uploading To Mixcloud',show.show.name);
     getArtwork(show).then( () => {
         uploadToMixcloudGo(show).then(response => {
             //logger.info(response);
@@ -282,7 +280,7 @@ const getArtwork = async (show) => {
 }
 
 const uploadToMixcloudGo = async (show) => {
-    logger.info('Uploading To Mixcloud GO',show);
+    logger.info('Uploading To Mixcloud GO',show.show.name);
     try {
         let audio = process.cwd() + "/ftp/"+show.job_id+'.mp3';
         let image = process.cwd() + "/images/"+show.show.id+'.jpg';
