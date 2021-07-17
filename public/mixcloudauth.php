@@ -1,4 +1,7 @@
 <?php
+	if(!isset($_SESSION['valid'])||!$_SESSION['valid']){
+		exit();
+	}
 	error_reporting(0);
 	function saveSettings($key,$value){
 		$settings=getSettings();

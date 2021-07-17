@@ -1,4 +1,7 @@
 <?php
+if(!isset($_SESSION['valid'])||!$_SESSION['valid']){
+	exit();
+}
 
 $json = file_get_contents('https://electricradio.co.uk/feed/radio/shows/');
 $obj = json_decode($json);
