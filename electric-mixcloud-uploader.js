@@ -93,7 +93,7 @@ current_show=show= {
     override: false
 };
 
-//current_show=false;
+current_show=false;
 //Get Current Show
 function getShow(){
     if(!settings.MIXCLOUD_API_ACCESS_TOKEN) {
