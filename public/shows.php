@@ -24,7 +24,6 @@ foreach ($obj->shows as $show){
 		</div>
 		<div class="showDetails">
 			<h3><?php echo $show->name; ?></h3>
-
             <input class="showCheckbox" type="checkbox" showID="<?php echo $show->id; ?>" name="checkbox<?php echo $show->id; ?>" id="checkbox<?php echo $show->id; ?>" <?php if(in_array($show->id,$settings->include)){echo 'checked';}?> >
             <label for="<?php echo $show->id; ?>">Process this show to MixCloud</label>
 
