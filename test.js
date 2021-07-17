@@ -30,11 +30,14 @@ new Date().toLocaleString("en-GB", {timeZone: "Europe/London"})
 d=new Date(show.date +' '+show.start);
 start = moment(d);
 end = moment(new Date(show.date +' '+show.end));
+
+start.subtract(1, 'hour');
+end.subtract(1, 'hour');
+
+
 if(show.end<show.start){
     end.add(1, 'day');
 }
 
-
-console.log(moment([2021, 2, 12]).isDST(),moment([2021, 7, 14]).isDST());
 console.log(d);
 console.log(start.format('YYYYMMDDHHmmss'));
