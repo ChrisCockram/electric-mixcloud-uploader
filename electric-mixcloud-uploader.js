@@ -321,5 +321,6 @@ function getExtension(filename) {
     return (i < 0) ? '' : filename.substr(i);
 }
 
-getShow();
+setTimeout(getShow, 3000);
+
 setInterval(getShow, 60000);
