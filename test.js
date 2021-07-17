@@ -27,10 +27,13 @@ let show= {
 };
 
 start = moment.utc(new Date(show.date +' '+show.start));
+start2 = moment(new Date(show.date +' '+show.start));
 end = moment.utc(new Date(show.date +' '+show.end));
 show.start_date=start;
 if(show.end<show.start){
     end.add(1, 'day');
 }
 let rm_url = 'http://radiomonitor.com/api/thisiselectric/?action=create_job&key='+'&start_timestamp='+start.format('YYYYMMDDHHmmss')+'&end_timestamp='+end.format('YYYYMMDDHHmmss');
+let rm_url2 = 'http://radiomonitor.com/api/thisiselectric/?action=create_job&key='+'&start_timestamp='+start2.format('YYYYMMDDHHmmss')+'&end_timestamp='+end.format('YYYYMMDDHHmmss');
 console.log(rm_url);
+console.log(rm_url2);
