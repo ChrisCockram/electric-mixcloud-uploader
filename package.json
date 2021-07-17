@@ -6,8 +6,7 @@
   "scripts": {
     "nodemon": "nodemon electric-mixcloud-uploader.js",
     "start": "node electric-mixcloud-uploader.js",
-    "stop": "node kill.js",
-    "test": "node test.js"
+    "stop": "node kill.js"
   },
   "keywords": [],
   "author": "",
