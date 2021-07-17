@@ -34,5 +34,5 @@ if(show.end<show.start){
     end.add(1, 'day');
 }
 
-console.log(start.format('YYYYMMDDHHmmss'));
+console.log(d);
 console.log(start.format('YYYYMMDDHHmmss'));
