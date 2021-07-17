@@ -122,8 +122,11 @@ function request_show(show){
         logger.info('This show is not on the include list');
         return false;
     }
-    start = moment.utc(new Date(show.date +' '+show.start));
-    end = moment.utc(new Date(show.date +' '+show.end));
+    start = moment(new Date(show.date +' '+show.start));
+    end = moment(new Date(show.date +' '+show.end));
+    start.subtract(1, 'hour');
+    end.subtract(1, 'hour');
+
     show.start_date=start;
     if(show.end<show.start){
         end.add(1, 'day');
