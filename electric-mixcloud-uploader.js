@@ -48,7 +48,6 @@ function readData(){
 readData();
 
 const settingInterval = setInterval(readData, 5000);
-const settingTEST = setInterval(function(){logger.info(settings)}, 5000);
 
 
 //FTP
