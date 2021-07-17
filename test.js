@@ -35,7 +35,6 @@ if(show.end<show.start){
 }
 
 
-console.log(moment([2011, 2, 12]).isDST(),moment([2011, 7, 14]).isDST() );
-
+console.log(moment([2021, 2, 12]).isDST(),moment([2021, 7, 14]).isDST());
 console.log(d);
 console.log(start.format('YYYYMMDDHHmmss'));
