@@ -23,6 +23,7 @@
 
 	$url = "https://www.mixcloud.com/oauth/access_token?client_id=".$settings->MIXCLOUD_API_CLIENT_ID."&redirect_uri=http://mixcloud.electricradio.co.uk/mixcloudauth&client_secret=".$settings->MIXCLOUD_API_CLIENT_SECRET."&code=".$OAUTH_CODE;
 
+	echo $url;
 
 	$json = file_get_contents($url);
 	$obj = json_decode($json);
