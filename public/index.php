@@ -90,6 +90,13 @@
 
                             <!--<a href="https://www.mixcloud.com/oauth/authorize?client_id=HzP4JwtYJaE8skCdgv&redirect_uri=http://mixcloud.electricradio.co.uk/mixcloudauth.php" target="_blank"><button id="LinkMixcloudButton" class="btn btn-primary"><i class="fab fa-mixcloud"></i> Link Mixcloud</button></a>-->
                             <lable for="LinkMixcloudButton">Link the MixCloud account you wish to upload to.</lable>
+
+                            <?php if($settings->MIXCLOUD_API_ACCESS_TOKEN!=""){
+                                $url="https://api.mixcloud.com/me/?access_token=".$settings->MIXCLOUD_API_ACCESS_TOKEN;
+	                            $json = file_get_contents($url);
+	                            $obj = json_decode($json);
+	                            print_r($obj);
+                            }?>
                         </div>
                     </form>
 
