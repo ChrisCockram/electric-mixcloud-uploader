@@ -45,9 +45,17 @@
     margin: 0px;
     padding: 0px;
 }
-
-.mixcloud_user{
+.mixcloud_user_title{
     margin-top: 10px;
+    background: darkgray;
+    -webkit-border-top-left-radius: 20px;
+    -webkit-border-top-right-radius: 20px;
+    -moz-border-radius-topleft: 20px;
+    -moz-border-radius-topright: 20px;
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+}
+.mixcloud_user{
     width: 400px;
     height: 100px;
     overflow: hidden;

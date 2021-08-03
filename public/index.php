@@ -96,6 +96,7 @@
 	                            $json = file_get_contents($url);
 	                            $obj = json_decode($json);
 	                            ?>
+                                    <span class="mixcloud_user_title">Account Connected</span>
                                     <div class="mixcloud_user" onclick="window.open('<?php echo $obj->url; ?>')">
                                         <div class="mixcloud_user_image"><img src="<?php echo $obj->pictures->medium;?>"></div>
                                         <div class="mixcloud_user_details">
