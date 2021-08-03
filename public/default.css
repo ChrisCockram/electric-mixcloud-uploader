@@ -47,9 +47,11 @@
 }
 
 .mixcloud_user{
+    margin-top: 10px;
     width: 400px;
     height: 100px;
     overflow: hidden;
+    border: darkgray 1px solid;
 }
 .mixcloud_user_image{
     float: left;

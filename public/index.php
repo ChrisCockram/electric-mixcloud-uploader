@@ -96,15 +96,13 @@
 	                            $json = file_get_contents($url);
 	                            $obj = json_decode($json);
 	                            ?>
-                                    <a href="<?php echo $obj->url; ?>">
-                                    <div class="mixcloud_user">
+                                    <div class="mixcloud_user" onclick="window.open('<?php echo $obj->url; ?>')">
                                         <div class="mixcloud_user_image"><img src="<?php echo $obj->pictures->medium;?>"></div>
                                         <div class="mixcloud_user_details">
                                             <b>Account:</b><?php echo $obj->name; ?><br>
                                             <b>Username:</b><?php echo $obj->username; ?><br>
                                         </div>
                                     </div>
-                                    </a>
 
 
 
