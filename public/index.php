@@ -96,7 +96,14 @@
 	                            $json = file_get_contents($url);
 	                            $obj = json_decode($json);
 	                            print_r($obj);
+	                            ?>
+                                    <img src="<?php echo $obj->pictures->medium;?>">
+                                    <b>Account:</b><?php echo $obj->name; ?>
+                                    <b>Username:</b><?php echo $obj->username; ?>
+
+                                <?php
                             }?>
+
                         </div>
                     </form>
 
