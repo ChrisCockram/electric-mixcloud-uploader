@@ -83,7 +83,12 @@
                     <br>
                     <form >
                         <div class="mb-3">
-                            <a href="https://www.mixcloud.com/oauth/authorize?client_id=HzP4JwtYJaE8skCdgv&redirect_uri=http://mixcloud.electricradio.co.uk/mixcloudauth.php" target="_blank"><button id="LinkMixcloudButton" class="btn btn-primary"><i class="fab fa-mixcloud"></i> Link Mixcloud</button></a>
+
+
+
+                           <button onclick="window.open('https://www.mixcloud.com/oauth/authorize?client_id=HzP4JwtYJaE8skCdgv&redirect_uri=http://mixcloud.electricradio.co.uk/mixcloudauth.php');" id="LinkMixcloudButton" class="btn btn-primary"><i class="fab fa-mixcloud"></i> Link Mixcloud</button>
+
+                            <!--<a href="https://www.mixcloud.com/oauth/authorize?client_id=HzP4JwtYJaE8skCdgv&redirect_uri=http://mixcloud.electricradio.co.uk/mixcloudauth.php" target="_blank"><button id="LinkMixcloudButton" class="btn btn-primary"><i class="fab fa-mixcloud"></i> Link Mixcloud</button></a>-->
                             <lable for="LinkMixcloudButton">Link the MixCloud account you wish to upload to.</lable>
                         </div>
                     </form>
