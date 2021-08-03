@@ -6,5 +6,7 @@
   "RADIO_MONITOR_API":"",
   "RADIO_API":"",
   "LOGIN_USERNAME":"admin",
-  "LOGIN_PASSWORD":""
+  "LOGIN_PASSWORD":"",
+  "OFFSET_SIGN":"0",
+  "OFFSET_SECONDS":"0"
 }

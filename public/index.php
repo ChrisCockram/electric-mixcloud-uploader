@@ -16,6 +16,12 @@
 	    }
 	    $settings=getSettings();
 
+	    if(isset($_POST['set'])){
+		    saveSettings($_POST['set'],$_POST['val']);
+		    echo 'success';
+		    exit();
+        }
+
 	    if(isset($_POST['showID'])){
             if($_POST['active']=='true'){
                 if(!in_array($_POST['showID'],$settings->include)){
@@ -82,6 +88,12 @@
                         </div>
                     </div>
 
+                    <h2>Time Offset</h2>
+                    Use this setting to allow for any delay in the stream.
+                    <br/>
+                    <select id="offset_sign"><option selected value="1">+</option><option value="0">-</option></select>
+                    <input type="number" id="offset_seconds" value="0"> Seconds
+
                     <h2>Shows</h2>
                     <div id="showsLoading">Loading Shows...</div>
                     <div id="shows" style="display: none;"><?php include_once ('shows.php')?></div>
@@ -127,6 +139,37 @@
             {
                 showID:$(this).attr("showID"),
                 active:this.checked
+            },
+            function(data, status){
+                if(data!='success'){
+                    alert("Data: " + data + "\nStatus: " + status);
+                }
+            }
+        );
+    });
+
+
+    $('#offset_sign').change(function() {
+        console.log(this.value);
+        $.post("index.php",
+            {
+                set:"OFFSET_SIGN",
+                val:this.value
+            },
+            function(data, status){
+                if(data!='success'){
+                    alert("Data: " + data + "\nStatus: " + status);
+                }
+            }
+        );
+    });
+
+    $('#offset_seconds').change(function() {
+        console.log(this.value);
+        $.post("index.php",
+            {
+                set:"OFFSET_SECONDS",
+                val:this.value
             },
             function(data, status){
                 if(data!='success'){

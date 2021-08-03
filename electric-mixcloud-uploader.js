@@ -29,7 +29,9 @@ logger.info('Software Version',version);
 let processingQueue=[];
 
 var settings={
-    include: []
+    include: [],
+    "OFFSET_SIGN":0,
+    "OFFSET_SECONDS":0
 };
 
 //Load Settings
@@ -124,8 +126,17 @@ function request_show(show){
     }
     start = moment(new Date(show.date +' '+show.start));
     end = moment(new Date(show.date +' '+show.end));
+    //TODO Work out DST Here
     start.subtract(1, 'hour');
     end.subtract(1, 'hour');
+
+    if(parseInt(settings.OFFSET_SIGN)===0){
+        start.subtract(parseInt(settings.OFFSET_SECONDS), 'seconds');
+        end.subtract(parseInt(settings.OFFSET_SECONDS), 'seconds');
+    }else{
+        start.add(parseInt(settings.OFFSET_SECONDS), 'seconds');
+        end.add(parseInt(settings.OFFSET_SECONDS), 'seconds');
+    }
 
     show.start_date=start;
     if(show.end<show.start){

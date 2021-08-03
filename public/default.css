@@ -29,3 +29,16 @@
     height: 50px;
     width: 50px;
 }
+#offset_sign{
+    height: 30px;
+    border: darkgray 1px solid;
+    margin: 0px;
+    padding: 0px;
+}
+#offset_seconds{
+    height: 30px;
+    width: 60px;
+    border: darkgray 1px solid;
+    margin: 0px;
+    padding: 0px;
+}
