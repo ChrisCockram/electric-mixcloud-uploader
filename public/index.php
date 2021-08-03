@@ -104,8 +104,7 @@
                                         <div class="mixcloud_user_details">
                                             <b>Account: </b><?php echo $obj->name; ?><br>
                                             <b>Username: </b><?php echo $obj->username; ?><br>
-                                            <b>City: </b><?php echo $obj->city; ?><br>
-                                            <b>Country: </b><?php echo $obj->country; ?><br>
+                                            <b>Location: </b><?php echo $obj->city; ?>, <?php echo $obj->country; ?><br>
                                             <b>Followers: </b><?php echo $obj->follower_count; ?><br>
                                         </div>
                                     </div>
