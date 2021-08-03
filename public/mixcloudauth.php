@@ -1,4 +1,5 @@
 <?php
+	echo'HAR';
 	if(!isset($_SESSION['valid'])||!$_SESSION['valid']){
 		exit();
 	}
