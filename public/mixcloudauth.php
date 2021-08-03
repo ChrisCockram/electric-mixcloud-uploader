@@ -1,6 +1,7 @@
 <?php
 	echo'HAR';
 	if(!isset($_SESSION['valid'])||!$_SESSION['valid']){
+		echo'NOT VALID';
 		exit();
 	}
 	error_reporting(0);
@@ -21,6 +22,7 @@
 
 
 	$OAUTH_CODE=$_GET['code'];
+	echo $OAUTH_CODE;
 
 	$url = "https://www.mixcloud.com/oauth/access_token?client_id=".$settings->MIXCLOUD_API_CLIENT_ID."&redirect_uri=http://mixcloud.electricradio.co.uk/mixcloudauth&client_secret=".$settings->MIXCLOUD_API_CLIENT_SECRET."&code=".$OAUTH_CODE;
 
