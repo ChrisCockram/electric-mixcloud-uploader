@@ -68,6 +68,9 @@
 <br>
 <div class="container">
     <div class="row">
+        <div class="col"><img class="logo"  src="Logo.png"></div>
+    </div>
+    <div class="row">
 
         <div class="col">
             <?php
