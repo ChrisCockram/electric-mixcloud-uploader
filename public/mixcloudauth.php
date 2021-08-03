@@ -1,9 +1,5 @@
 <?php
-	echo'HAR';
-
-	if(isset($_SESSION['valid'])&&$_SESSION['valid']){
-		echo 'SESSION VALID';
-	}
+	session_start();
 
 	if(!isset($_SESSION['valid'])||!$_SESSION['valid']){
 		echo'NOT VALID';
