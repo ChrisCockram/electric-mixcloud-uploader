@@ -102,8 +102,11 @@
                                     <div class="mixcloud_user" onclick="window.open('<?php echo $obj->url; ?>')">
                                         <div class="mixcloud_user_image"><img src="<?php echo $obj->pictures->medium;?>"></div>
                                         <div class="mixcloud_user_details">
-                                            <b>Account:</b><?php echo $obj->name; ?><br>
-                                            <b>Username:</b><?php echo $obj->username; ?><br>
+                                            <b>Account: </b><?php echo $obj->name; ?><br>
+                                            <b>Username: </b><?php echo $obj->username; ?><br>
+                                            <b>City: </b><?php echo $obj->city; ?><br>
+                                            <b>Country: </b><?php echo $obj->country; ?><br>
+                                            <b>Followers: </b><?php echo $obj->follower_count; ?><br>
                                         </div>
                                     </div>
 
