@@ -45,3 +45,20 @@
     margin: 0px;
     padding: 0px;
 }
+
+.mixcloud_user{
+    width: 400px;
+    height: 100px;
+    overflow: hidden;
+}
+.mixcloud_user_image{
+    float: left;
+    height: 100px;
+    width: 100px;
+}
+.mixcloud_user_details{
+    float: right;
+    width: 280px;
+    height: 100px;
+    overflow: hidden;
+}

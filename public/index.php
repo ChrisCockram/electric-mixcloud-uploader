@@ -95,11 +95,18 @@
                                 $url="https://api.mixcloud.com/me/?access_token=".$settings->MIXCLOUD_API_ACCESS_TOKEN;
 	                            $json = file_get_contents($url);
 	                            $obj = json_decode($json);
-	                            print_r($obj);
 	                            ?>
-                                    <img src="<?php echo $obj->pictures->medium;?>">
-                                    <b>Account:</b><?php echo $obj->name; ?>
-                                    <b>Username:</b><?php echo $obj->username; ?>
+                                    <a href="<?php echo $obj->url; ?>">
+                                    <div class="mixcloud_user">
+                                        <div class="mixcloud_user_image"><img src="<?php echo $obj->pictures->medium;?>"></div>
+                                        <div class="mixcloud_user_details">
+                                            <b>Account:</b><?php echo $obj->name; ?><br>
+                                            <b>Username:</b><?php echo $obj->username; ?><br>
+                                        </div>
+                                    </div>
+                                    </a>
+
+
 
                                 <?php
                             }?>
