@@ -2,6 +2,10 @@
     session_start();
     if(isset($_SESSION['valid'])&&$_SESSION['valid']){
 
+	    $settings = file_get_contents('../settings.json');
+	    $settings = json_decode($settings);
+
+
 	    function saveSettings($key,$value){
 		    $settings=getSettings();
 		    $settings->$key=$value;
@@ -91,9 +95,10 @@
                     <h2>Time Offset</h2>
                     Use this setting to allow for any delay in the stream.
                     <br/>
-                    <select id="offset_sign"><option selected value="1">+</option><option value="0">-</option></select>
-                    <input type="number" id="offset_seconds" value="0"> Seconds
-
+                    <select id="offset_sign"><option <?php if($settings->OFFSET_SIGN==="1"){echo "selected";} ?> value="1">+</option><option <?php if($settings->OFFSET_SIGN==="0"){echo "selected";} ?> value="0">-</option></select>
+                    <input type="number" id="offset_seconds" value="<?php echo $settings->OFFSET_SECONDS; ?>"> Seconds
+                    <br/>
+                    <br/>
                     <h2>Shows</h2>
                     <div id="showsLoading">Loading Shows...</div>
                     <div id="shows" style="display: none;"><?php include_once ('shows.php')?></div>

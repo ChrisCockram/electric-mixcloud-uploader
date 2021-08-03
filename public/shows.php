@@ -7,8 +7,6 @@ $json = file_get_contents('https://electricradio.co.uk/feed/radio/shows/');
 $obj = json_decode($json);
 
 
-$settings = file_get_contents('../settings.json');
-$settings = json_decode($settings);
 
 
 
