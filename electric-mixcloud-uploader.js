@@ -1,5 +1,5 @@
 const fetch = require('node-fetch');
-const moment = require('moment');
+const moment = require('moment-timezone');
 const xml2js = require ('xml2js');
 const path = require('path');
 const axios = require('axios');
@@ -123,11 +123,9 @@ function request_show(show){
         logger.info('This show is not on the include list');
         return false;
     }
-    start = moment(new Date(show.date +' '+show.start));
-    end = moment(new Date(show.date +' '+show.end));
-    //TODO Work out DST Here
-    start.subtract(1, 'hour');
-    end.subtract(1, 'hour');
+
+    start = moment.tz(show.date+' '+show.start,'Europe/London');
+    end = moment.tz(show.date+' '+show.end,'Europe/London');
 
     if(parseInt(settings.OFFSET_SIGN)===0){
         start.subtract(parseInt(settings.OFFSET_SECONDS), 'seconds');
@@ -143,8 +141,8 @@ function request_show(show){
     }
     logger.info(new Date(show.date +' '+show.start));
     logger.info(new Date(show.date +' '+show.end));
-    logger.info(start.format('YYYYMMDDHHmmss'));
-    let rm_url = 'http://radiomonitor.com/api/thisiselectric/?action=create_job&key='+settings.RADIO_MONITOR_API+'&start_timestamp='+start.format('YYYYMMDDHHmmss')+'&end_timestamp='+end.format('YYYYMMDDHHmmss');
+    logger.info(start.utc().format('YYYYMMDDHHmmss'));
+    let rm_url = 'http://radiomonitor.com/api/thisiselectric/?action=create_job&key='+settings.RADIO_MONITOR_API+'&start_timestamp='+start.utc().format('YYYYMMDDHHmmss')+'&end_timestamp='+end.utc().format('YYYYMMDDHHmmss');
     logger.info(rm_url);
     fetch(rm_url)
         .then(res => res.text())
