@@ -45,6 +45,7 @@ end = moment.tz(show.date+' '+show.end,'Europe/London');
 if(show.end<show.start){
     end.add(1, 'day');
 }
+end.add(1, 'day');
 
 
 console.log('Original Formatting: ',start.format('YYYYMMDDHHmmss'));
