@@ -26,6 +26,13 @@ let show= {
     override: false
 };
 
+
+console.log('Server Times');
+console.log(new Date());
+console.log(moment());
+console.log('------');
+
+
 //new Date().toLocaleString("en-GB", {timeZone: "Europe/London"})
 console.log('Parse: ',show.date +' '+show.start)
 d=new Date(show.date +' '+show.start);
