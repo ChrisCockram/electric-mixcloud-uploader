@@ -1,5 +1,5 @@
 const moment = require('moment');
-const MomentTZ = require('moment-timezone');
+const momentTZ = require('moment-timezone');
 
 
 
@@ -38,8 +38,7 @@ let show= {
 
 
 console.log(show.date +' '+show.start);
-console.log(MomentTZ(show.date +' '+show.start).format());
-console.log(MomentTZ(show.date +' '+show.start, 'Europe/London').format());
+console.log(momentTZ.tz(show.date +' '+show.start, 'Europe/London').utc().format('YYYYMMDD HH:mm:ss'));
 
 
 
