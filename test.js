@@ -36,7 +36,7 @@ start = moment(d);
 end = moment(new Date(show.date +' '+show.end));
 
 console.log(new Date(show.date +' '+show.end).toUTCString);
-console.log(new Date(show.date +' '+show.end)..toLocaleString("en-GB", {timeZone: "Europe/London"}));
+console.log(new Date(show.date +' '+show.end).toLocaleString("en-GB", {timeZone: "Europe/London"}));
 //THIS IS WHAT NEEDS TO BE REPLACED
 //start.subtract(1, 'hour');
 //end.subtract(1, 'hour');
