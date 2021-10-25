@@ -37,8 +37,9 @@ let show= {
 
 
 
-
-console.log(MomentTZ(show.date +' '+show.start).tz('Europe/London').format());
+console.log(show.date +' '+show.start);
+console.log(MomentTZ(show.date +' '+show.start).format());
+console.log(MomentTZ(show.date +' '+show.start, 'Europe/London').format());
 
 
 
