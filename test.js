@@ -35,18 +35,7 @@ console.log('Parsed: ',d);
 start = moment(d);
 end = moment(new Date(show.date +' '+show.end));
 
-testM = moment(show.date +' '+show.end);
-console.log('Moment Test: ',testM);
-
-testM = moment(show.date +' '+show.end+'Z');
-console.log('Moment Test2: ',testM);
-
-testM = moment(show.date +' '+show.end).tz('Europe/London');
-console.log('Moment Test3: ', testM);
-console.log('Moment Test3a: ', testM.utc());
-
-
-
+console.log(new Date(show.date +' '+show.end).toUTCString);
 
 //THIS IS WHAT NEEDS TO BE REPLACED
 //start.subtract(1, 'hour');
