@@ -26,13 +26,20 @@ let show= {
     override: false
 };
 
-new Date().toLocaleString("en-GB", {timeZone: "Europe/London"})
+//new Date().toLocaleString("en-GB", {timeZone: "Europe/London"})
+console.log('Parse: ',show.date +' '+show.start)
 d=new Date(show.date +' '+show.start);
+console.log('Parsed: ',d);
+
+
 start = moment(d);
 end = moment(new Date(show.date +' '+show.end));
 
-start.subtract(1, 'hour');
-end.subtract(1, 'hour');
+
+
+//THIS IS WHAT NEEDS TO BE REPLACED
+//start.subtract(1, 'hour');
+//end.subtract(1, 'hour');
 
 
 if(show.end<show.start){
@@ -40,4 +47,7 @@ if(show.end<show.start){
 }
 
 console.log(d);
-console.log(start.format('YYYYMMDDHHmmss'));
+
+console.log('');
+console.log('Original Formatting: ',start.format('YYYYMMDDHHmmss'));
+console.log('Final Formatting: ',start.utc().format('YYYYMMDDHHmmss'));
