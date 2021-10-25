@@ -41,6 +41,10 @@ console.log('Moment Test: ',testM);
 testM = moment(show.date +' '+show.end+'Z');
 console.log('Moment Test2: ',testM);
 
+testM = moment(show.date +' '+show.end).tz('Europe/London');
+console.log('Moment Test3: ', testM);
+console.log('Moment Test3a: ', testM.utc());
+
 
 
 
