@@ -1,5 +1,4 @@
-const moment = require('moment');
-const momentTZ = require('moment-timezone');
+const moment = require('moment-timezone');
 
 
 
@@ -31,47 +30,13 @@ let show= {
     override: false
 };
 
+//console.log(show.date +' '+show.start);
+//console.log(momentTZ.tz(show.date +' '+show.start, 'Europe/London').utc().format('YYYYMMDD HH:mm:ss'));
+
+start = moment.tz(show.date+' '+show.start,'Europe/London');
+end = moment.tz(show.date+' '+show.end,'Europe/London');
 
 
-
-
-
-
-console.log(show.date +' '+show.start);
-console.log(momentTZ.tz(show.date +' '+show.start, 'Europe/London').utc().format('YYYYMMDD HH:mm:ss'));
-
-
-
-
-
-
-
-console.log('')
-console.log('')
-console.log('')
-console.log('')
-console.log('')
-console.log('')
-console.log('')
-console.log('')
-
-console.log('Server Times');
-console.log(new Date());
-console.log(moment());
-console.log('------');
-
-
-//new Date().toLocaleString("en-GB", {timeZone: "Europe/London"})
-console.log('Parse: ',show.date +' '+show.start)
-d=new Date(show.date +' '+show.start);
-console.log('Parsed: ',d);
-
-
-start = moment(d);
-end = moment(new Date(show.date +' '+show.end));
-
-console.log(new Date(show.date +' '+show.end).toUTCString);
-console.log(new Date(show.date +' '+show.end).toLocaleString("en-GB", {timeZone: "Europe/London"}));
 //THIS IS WHAT NEEDS TO BE REPLACED
 //start.subtract(1, 'hour');
 //end.subtract(1, 'hour');
@@ -81,8 +46,6 @@ if(show.end<show.start){
     end.add(1, 'day');
 }
 
-console.log(d);
 
-console.log('');
 console.log('Original Formatting: ',start.format('YYYYMMDDHHmmss'));
 console.log('Final Formatting: ',start.utc().format('YYYYMMDDHHmmss'));
