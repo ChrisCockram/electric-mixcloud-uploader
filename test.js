@@ -35,6 +35,13 @@ console.log('Parsed: ',d);
 start = moment(d);
 end = moment(new Date(show.date +' '+show.end));
 
+testM = moment(show.date +' '+show.end);
+console.log('Moment Test: ',testM);
+
+testM = moment(show.date +' '+show.end+'Z');
+console.log('Moment Test2: ',testM);
+
+
 
 
 //THIS IS WHAT NEEDS TO BE REPLACED
