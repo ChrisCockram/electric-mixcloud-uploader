@@ -21,6 +21,7 @@
     "ftp-srv": "^4.4.0",
     "log4js": "^6.3.0",
     "moment": "^2.29.1",
+    "moment-timezone": "^0.5.33",
     "node-fetch": "^2.6.1",
     "ps-node": "^0.1.6",
     "read-last-lines": "^1.8.0",

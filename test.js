@@ -1,4 +1,9 @@
 const moment = require('moment');
+const MomentTZ = require('moment-timezone');
+
+
+
+
 let show= {
     date: "2021-05-27",
     start: "10:00",
@@ -26,6 +31,29 @@ let show= {
     override: false
 };
 
+
+
+
+
+
+
+
+console.log(MomentTZ(show.date +' '+show.start).tz('Europe/London').format());
+
+
+
+
+
+
+
+console.log('')
+console.log('')
+console.log('')
+console.log('')
+console.log('')
+console.log('')
+console.log('')
+console.log('')
 
 console.log('Server Times');
 console.log(new Date());
