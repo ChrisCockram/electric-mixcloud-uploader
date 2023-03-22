@@ -332,6 +332,45 @@ function getExtension(filename) {
     return (i < 0) ? '' : filename.substr(i);
 }
 
+function processLog(){
+    const fileName = 'output.log';
+    const maxLines = 500;
+    // Read the file asynchronously and get the data and error
+    fs.readFile(fileName, 'utf8', (error, data) => {
+        // If there is an error, log it and exit
+        if (error) {
+            logger.error('Unable access '+fileName);
+            return;
+        }
+        // Split the data by newline characters and get the number of lines
+        const lines = data.split('\n');
+        const numLines = lines.length;
+
+        // If the number of lines is greater than the maximum, remove the first n lines
+        if (numLines > maxLines) {
+            const n = numLines - maxLines;
+            lines.splice(0, n);
+            // Join the remaining lines by newline characters and get the new data
+            const newData = lines.join('\n');
+
+            // Write the new data to the file asynchronously and get the error
+            fs.writeFile(fileName, newData, 'utf8', (error) => {
+                // If there is an error, log it and exit
+                if (error) {
+                    logger.error('Unable to shorten to the log file.');
+
+                    return;
+                }
+                // Log a success message
+            });
+        } else {
+            // Log a message that no changes are needed
+        }
+    });
+}
+processLog();
+
 setTimeout(getShow, 3000);
 
 setInterval(getShow, 60000);
+setInterval(processLog, 70000);
