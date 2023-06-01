@@ -105,10 +105,14 @@ function getShow(){
     fetch(settings.RADIO_API, { method: "Get" })
         .then(res => res.json())
         .then((json) => {
-            logger.info(json.broadcast.current_show.show.id)
+            logger.info(json.broadcast.current_show.show.id);
             if(current_show==false){
+                logger.info('current show is false.');
                 current_show=json.broadcast.current_show;
+                logger.info(current_show.show.id);
             }else {
+                logger.info('Current Show not false');
+
                 if(current_show.show.id != json.broadcast.current_show.show.id){
                     logger.info('New Current Show!')
                     request_show(current_show);
