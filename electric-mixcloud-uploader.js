@@ -96,9 +96,10 @@ current_show=show= {
 };
 
 current_show=false;
-logger.info('Radio API: '+settings.RADIO_API);
+logger.info('Testing');
 //Get Current Show
 function getShow(){
+    logger.info('GetShow');
     if(!settings.MIXCLOUD_API_ACCESS_TOKEN) {
         logger.info('Mixcloud API not set');
         return false;
