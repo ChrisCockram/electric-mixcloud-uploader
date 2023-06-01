@@ -46,10 +46,7 @@ function readData(){
     }else {
     }
 }
-logger.info('Testing Hello');
 readData();
-logger.info('Testing World');
-
 
 const settingInterval = setInterval(readData, 5000);
 
@@ -100,6 +97,7 @@ current_show=false;
 //Get Current Show
 function getShow(){
     logger.info('GetShow');
+    logger.info(settings.RADIO_API);
     if(!settings.MIXCLOUD_API_ACCESS_TOKEN) {
         logger.info('Mixcloud API not set');
         return false;
