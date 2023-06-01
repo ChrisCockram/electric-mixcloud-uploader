@@ -96,8 +96,6 @@ current_show=show= {
 current_show=false;
 //Get Current Show
 function getShow(){
-    logger.info('GetShow');
-    logger.info(settings.RADIO_API);
     if(!settings.MIXCLOUD_API_ACCESS_TOKEN) {
         logger.info('Mixcloud API not set');
         return false;
@@ -107,12 +105,8 @@ function getShow(){
         .then((json) => {
             logger.info(json.broadcast.current_show.show.id);
             if(current_show==false){
-                logger.info('current show is false.');
                 current_show=json.broadcast.current_show;
-                logger.info(current_show.show.id);
             }else {
-                logger.info('Current Show not false');
-
                 if(current_show.show.id != json.broadcast.current_show.show.id){
                     logger.info('New Current Show!')
                     request_show(current_show);
