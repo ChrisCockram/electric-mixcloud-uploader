@@ -23,7 +23,6 @@ log4js.configure({
     }
 });
 const logger = log4js.getLogger();
-
 const version = process.env.npm_package_version;
 logger.info('Software Version',version);
 let processingQueue=[];
@@ -47,8 +46,10 @@ function readData(){
     }else {
     }
 }
-
+logger.info('Testing Hello');
 readData();
+logger.info('Testing World');
+
 
 const settingInterval = setInterval(readData, 5000);
 
@@ -96,7 +97,6 @@ current_show=show= {
 };
 
 current_show=false;
-logger.info('Testing');
 //Get Current Show
 function getShow(){
     logger.info('GetShow');
