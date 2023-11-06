@@ -122,8 +122,22 @@ function request_show(show){
         return false;
     }
 
+
+
+    //is the show a split over midnight?
+    if(show.split){
+        if(typeof show.real_end !=undefined){
+            show.end=formatTime(show.real_end);
+            logger.info('This show runs over midnight until:', show.end);
+        }else{
+            return false
+        }        
+    }
+
     start = moment.tz(show.date+' '+show.start,'Europe/London');
     end = moment.tz(show.date+' '+show.end,'Europe/London');
+
+
 
     if(parseInt(settings.OFFSET_SIGN)===0){
         start.subtract(parseInt(settings.OFFSET_SECONDS), 'seconds');
@@ -163,6 +177,29 @@ function request_show(show){
                 console.error('Failed to parse XML',text);
             });
         })
+}
+
+function formatTime(inputTime) {
+    // Split the input time into hours, minutes, and period (am/pm)
+    const [timePart, period] = inputTime.split(' ');
+  
+    // Split the timePart into hours and minutes
+    const [hours, minutes] = timePart.split(':');
+  
+    // Parse the hours and minutes as integers
+    const hoursInt = parseInt(hours);
+    const minutesInt = parseInt(minutes);
+  
+    // Format hours with leading zero if necessary
+    const formattedHours = (hoursInt < 10 ? '0' : '') + hoursInt;
+  
+    // Format minutes with leading zero if necessary
+    const formattedMinutes = (minutesInt < 10 ? '0' : '') + minutesInt;
+  
+    // Combine the formatted parts into the desired format
+    const formattedTime = `${formattedHours}:${formattedMinutes}`;
+  
+    return formattedTime;
 }
 
 function jobIdExist(job_id){
