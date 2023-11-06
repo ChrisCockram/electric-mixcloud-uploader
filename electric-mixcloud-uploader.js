@@ -126,12 +126,12 @@ function request_show(show){
 
     //is the show a split over midnight?
     if(show.split){
-        if(typeof show.real_end !=undefined){
-            show.end=formatTime(show.real_end);
-            logger.info('This show runs over midnight until:', show.end);
-        }else{
+        if(show.real_end === undefined){
             return false
-        }        
+        }else{
+            show.end=formatTime(show.real_end);
+            //logger.info('This show runs over midnight until:', show.end);
+        }
     }
 
     start = moment.tz(show.date+' '+show.start,'Europe/London');
