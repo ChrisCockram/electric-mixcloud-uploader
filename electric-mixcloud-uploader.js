@@ -209,26 +209,26 @@ function processFile(filePath){
         for(const show of processingQueue){
             if(show.job_id==path.parse(filePath).name){
                 if(show.status==false) {
-                    console.log('filefound');
+                    //console.log('filefound');
                     show.status = 'Uploading';
                     show.uploadsize=getFilesizeInBytes('./ftp/'+filePath);
                     show.uploadsizecheck=0;
                     logger.info('File:'+filePath+' File Size:'+show.uploadsize+' Upload Size Check:'+show.uploadsizecheck);
-                    console.log('uploadsizecheck',show.uploadsizecheck,show.uploadsize);
+                    //console.log('uploadsizecheck',show.uploadsizecheck,show.uploadsize);
                 }else{
-                    console.log('Status isnt false');
-                    console.log('uploadsizecheck>',show.uploadsizecheck,show.uploadsize,getFilesizeInBytes('./ftp/'+filePath));
+                    //console.log('Status isnt false');
+                    //console.log('uploadsizecheck>',show.uploadsizecheck,show.uploadsize,getFilesizeInBytes('./ftp/'+filePath));
 
                     if(show.uploadsize==getFilesizeInBytes('./ftp/'+filePath)){
                         show.uploadsizecheck=show.uploadsizecheck+1;
-                        console.log('uploadsizecheck',show.uploadsizecheck,show.uploadsize);
+                        //console.log('uploadsizecheck',show.uploadsizecheck,show.uploadsize);
                         logger.info('File:'+filePath+' File Size:'+show.uploadsize+' Upload Size Check:'+show.uploadsizecheck);
 
                     }else{
                         show.uploadsize=getFilesizeInBytes('./ftp/'+filePath);
                     }
                     if(show.uploadsizecheck==5){
-                        console.log('uploadsizecheck',show.uploadsizecheck,show.uploadsize);
+                        //console.log('uploadsizecheck',show.uploadsizecheck,show.uploadsize);
                         logger.info('File:'+filePath+' File Size:'+show.uploadsize+' Upload Size Check:'+show.uploadsizecheck);
                         logger.info('File Upload Complete:'+filePath);
                         show.status='File Received';
@@ -332,7 +332,7 @@ function getExtension(filename) {
 
 function processLog(){
     const fileName = 'output.log';
-    const maxLines = 500;
+    const maxLines = 5000;
     // Read the file asynchronously and get the data and error
     fs.readFile(fileName, 'utf8', (error, data) => {
         // If there is an error, log it and exit
