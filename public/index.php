@@ -131,10 +131,6 @@
                     <input type="number" id="offset_seconds" value="<?php echo $settings->OFFSET_SECONDS; ?>"> Seconds
                     <br/>
                     <br/>
-                    <h2>Shows</h2>
-                    <div id="showsLoading">Loading Shows...</div>
-                    <div id="shows" style="display: none;"><?php include_once ('shows.php')?></div>
-
 
                 <?php
             }else{
@@ -165,26 +161,6 @@
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4" crossorigin="anonymous"></script>
 <script>
-    $( document ).ready(function() {
-        $("#showsLoading").slideUp(500);
-        $("#shows").slideDown(500);
-        console.log( "ready!" );
-    });
-
-    $('.showCheckbox').change(function() {
-        $.post("index.php",
-            {
-                showID:$(this).attr("showID"),
-                active:this.checked
-            },
-            function(data, status){
-                if(data!='success'){
-                    alert("Data: " + data + "\nStatus: " + status);
-                }
-            }
-        );
-    });
-
 
     $('#offset_sign').change(function() {
         console.log(this.value);

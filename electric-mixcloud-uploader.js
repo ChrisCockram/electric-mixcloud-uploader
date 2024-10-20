@@ -27,7 +27,7 @@ const version = process.env.npm_package_version;
 logger.info('Software Version',version);
 let processingQueue=[];
 
-var settings={
+let settings={
     include: [],
     "OFFSET_SIGN":0,
     "OFFSET_SECONDS":0
@@ -63,35 +63,7 @@ function checkFTP(){
         }
     });
 }
-
 const checkFTPInterval = setInterval(checkFTP, 5000);
-
-current_show=show= {
-    date: "2021-07-17",
-    start: "20:00",
-    end: "21:00",
-    show: {
-        id: 10706,
-        name: "Sam Feldt",
-        slug: "anthems",
-        url: "https://electricradio.co.uk/show/anthems/",
-        latest: "",
-        website: "",
-        hosts: [ ],
-        producers: [ ],
-        genres: [
-            "Classic House"
-        ],
-        languages: [ ],
-        avatar_url: "https://electricradio.co.uk/wp-content/uploads/2020/12/Sam-Feldt-150x150.jpg",
-        image_url: "https://electricradio.co.uk/wp-content/uploads/2020/12/Sam-Feldt-150x150.jpg",
-        route: "https://electricradio.co.uk/feed/shows/?show=sam-feldt",
-        feed: "https://electricradio.co.uk/feed/shows/?show=sam-feldt"
-    },
-    encore: false,
-    split: false,
-    override: false
-};
 
 current_show=false;
 //Get Current Show
@@ -117,12 +89,10 @@ function getShow(){
 
 function request_show(show){
     logger.info('Requesting', show.show.name);
-    if(!settings.include.includes(show.show.id.toString())){
-        logger.info('This show is not on the include list');
+    if(!show.upload_to_mixcloud){
+        logger.info('This show is not to be uploaded to mixcloud');
         return false;
     }
-
-
 
     //is the show a split over midnight?
     if(show.split){
