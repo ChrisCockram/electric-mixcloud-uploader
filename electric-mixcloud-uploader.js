@@ -124,7 +124,7 @@ function request_show(show){
     logger.info(new Date(show.date +' '+show.start));
     logger.info(new Date(show.date +' '+show.end));
     logger.info(start.utc().format('YYYYMMDDHHmmss'));
-    let rm_url = 'http://eradiomonitor.com/api/thisiselectric/?action=create_job&key='+settings.RADIO_MONITOR_API+'&start_timestamp='+start.utc().format('YYYYMMDDHHmmss')+'&end_timestamp='+end.utc().format('YYYYMMDDHHmmss');
+    let rm_url = 'http://radiomonitor.com/api/thisiselectric/?action=create_job&key='+settings.RADIO_MONITOR_API+'&start_timestamp='+start.utc().format('YYYYMMDDHHmmss')+'&end_timestamp='+end.utc().format('YYYYMMDDHHmmss');
     logger.info(rm_url);
     fetch(rm_url)
         .then(res => res.text())
