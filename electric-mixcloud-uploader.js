@@ -68,6 +68,7 @@ const checkFTPInterval = setInterval(checkFTP, 5000);
 let current_show=false;
 //Get Current Show
 function getShow(){
+    logger.info('Heartbeat');
     if(!settings.MIXCLOUD_API_ACCESS_TOKEN) {
         logger.info('Mixcloud API not set');
         return false;
