@@ -53,17 +53,20 @@ const settingInterval = setInterval(readData, 5000);
 
 //FTP
 function checkFTP(){
+    logger.info('FTP Check')
     const testFolder = './ftp/';
     const fs = require('fs');
     fs.readdirSync(testFolder).forEach(file => {
-        var fileid = file.replace(/\.[^/.]+$/, "");
+        let fileid = file.replace(/\.[^/.]+$/, "");
         console.log(fileid);
+        logger.info('File found - ',file)
         if(jobIdExist(fileid)){
+            logger.info('Job matched - ',fileid)
             processFile(file);
         }
     });
 }
-const checkFTPInterval = setInterval(checkFTP, 5000);
+const checkFTPInterval = setInterval(checkFTP, 30000);
 
 let current_show=false;
 //Get Current Show
@@ -252,7 +255,7 @@ const uploadToMixcloud = async (show) =>{
     logger.info('Uploading To Mixcloud',show.show.name);
     getArtwork(show).then( () => {
         uploadToMixcloudGo(show).then(response => {
-            //logger.info(response);
+            logger.info(response);
             console.log(show);
             if (response.data.result.success) {
                 logger.info('show uploaded');
