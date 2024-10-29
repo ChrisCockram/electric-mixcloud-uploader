@@ -97,17 +97,16 @@ function request_show(show){
     //is the show a split over midnight?
     if(show.split){
         if(show.real_end === undefined){
+            logger.error('show.real_end is undefined');
             return false
         }else{
             show.end=formatTime(show.real_end);
-            //logger.info('This show runs over midnight until:', show.end);
+            logger.info('This show runs over midnight until:', show.end);
         }
     }
 
     start = moment.tz(show.date+' '+show.start,'Europe/London');
     end = moment.tz(show.date+' '+show.end,'Europe/London');
-
-
 
     if(parseInt(settings.OFFSET_SIGN)===0){
         start.subtract(parseInt(settings.OFFSET_SECONDS), 'seconds');
@@ -379,3 +378,9 @@ setTimeout(getShow, 3000);
 
 setInterval(getShow, 60000);
 setInterval(processLog, 70000);
+
+function heartbeat(){
+    logger.info('Heartbeat');
+}
+heartbeat();
+setInterval(heartbeat, 3600000);
