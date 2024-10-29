@@ -53,7 +53,6 @@ const settingInterval = setInterval(readData, 5000);
 
 //FTP
 function checkFTP(){
-    logger.info('FTP Check')
     const testFolder = './ftp/';
     const fs = require('fs');
     fs.readdirSync(testFolder).forEach(file => {
