@@ -58,8 +58,8 @@ function checkFTP(){
     fs.readdirSync(testFolder).forEach(file => {
         let fileid = file.replace(/\.[^/.]+$/, "");
         console.log(fileid);
-        logger.info('File found - ',file)
         if(jobIdExist(fileid)){
+            logger.info('File found - ',file)
             logger.info('Job matched - ',fileid)
             processFile(file);
         }
